@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vortex PT — Post-Tension Shop Drawing Software</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#081426; --bg2:#0a1a30; --bg3:#060f1d;
+  --line:#16324f; --line2:#1f4468; --line3:#2c5c8a;
+  --cyan:#4fd8ff; --cyan-dim:#2f8fc0; --amber:#ffb02e; --amber2:#ffd166;
+  --magenta:#ff5dc8; --red:#ff5d5d;
+  --paper:#edf0e8; --paper-line:#c3cdbd; --ink:#123a63; --ink-soft:#3a5a7e;
+  --txt:#c9dcEe; --txt-dim:#7d99b5;
+  --disp:'Chakra Petch',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-padding-top:84px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  background:var(--bg); color:var(--txt); font-family:var(--body);
+  font-size:16px; line-height:1.65; overflow-x:hidden;
+}
+::selection{background:var(--amber); color:#08131f}
+a{color:inherit; text-decoration:none}
+img{display:block; max-width:100%}
+button{font:inherit; cursor:pointer}
+
+/* film grain */
+body::after{
+  content:""; position:fixed; inset:-50%; z-index:120; pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 9s steps(6) infinite;
+}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}}
+
+.mono{font-family:var(--mono)}
+.wrap{width:min(1240px,92vw); margin-inline:auto}
+
+/* ============ REVEALS ============ */
+.rv{opacity:0; transform:translateY(28px); transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0s)}
+.rv.in{opacity:1; transform:none}
+.lm{display:block; overflow:hidden}
+.lm>span{display:block; transform:translateY(112%); transition:transform 1s cubic-bezier(.2,.75,.15,1); transition-delay:var(--d,0s)}
+.in .lm>span, .lm.in>span{transform:none}
+
+/* ============ NAV ============ */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:100; height:60px;
+  display:flex; align-items:center; gap:28px; padding:0 clamp(16px,3vw,40px);
+  border-bottom:1px solid var(--line); background:rgba(7,16,30,.82); backdrop-filter:blur(10px);
+  transition:background .3s;
+}
+nav.scrolled{background:rgba(5,12,23,.95)}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--disp); font-weight:700; letter-spacing:.14em; font-size:15px; color:#fff}
+.brand svg{flex:none}
+.brand b{color:var(--amber); font-weight:700}
+.nlinks{display:flex; gap:26px; margin-left:auto}
+.nlinks a{font-family:var(--mono); font-size:11px; letter-spacing:.22em; color:var(--txt-dim); padding:6px 0; position:relative; transition:color .25s}
+.nlinks a::after{content:""; position:absolute; left:0; bottom:0; height:1px; width:0; background:var(--cyan); transition:width .3s}
+.nlinks a:hover{color:var(--cyan)} .nlinks a:hover::after{width:100%}
+.lang{font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--txt-dim); background:none; border:1px solid var(--line2); padding:6px 12px; transition:.25s}
+.lang:hover{border-color:var(--cyan); color:var(--cyan)}
+.ncta{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:#08131f; background:var(--amber); border:none; padding:9px 16px; font-weight:600; transition:.25s; box-shadow:0 0 0 rgba(79,216,255,0)}
+.ncta:hover{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--cyan)}
+@media(max-width:900px){.nlinks{display:none}}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:12px; letter-spacing:.2em; font-weight:600; padding:15px 26px; border:1px solid transparent; transition:transform .25s, box-shadow .25s, background .25s, color .25s; position:relative}
+.btn-p{background:var(--amber); color:#0a1522}
+.btn-p:hover{transform:translate(-3px,-3px); box-shadow:5px 5px 0 var(--cyan)}
+.btn-g{border-color:var(--line3); color:var(--cyan); background:transparent}
+.btn-g:hover{background:rgba(79,216,255,.08); border-color:var(--cyan); transform:translate(-2px,-2px); box-shadow:4px 4px 0 rgba(79,216,255,.25)}
+
+/* ============ KICKERS / HEADS ============ */
+.kick{display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:.34em; color:var(--cyan); text-transform:uppercase}
+.kick::before{content:""; width:34px; height:1px; background:var(--cyan)}
+.h2{font-family:var(--disp); font-weight:700; font-size:clamp(30px,4.4vw,52px); line-height:1.06; color:#fff; text-transform:uppercase; letter-spacing:.01em; margin:16px 0 10px}
+.sub{color:var(--txt-dim); max-width:60ch; font-size:15.5px}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative; min-height:100vh; padding:130px 0 90px; overflow:hidden;
+  background:
+    radial-gradient(1100px 520px at 74% 8%, rgba(79,216,255,.07), transparent 62%),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(79,216,255,.045) 23px 24px),
+    repeating-linear-gradient(90deg, transparent 0 23px, rgba(79,216,255,.045) 23px 24px),
+    repeating-linear-gradient(0deg, transparent 0 119px, rgba(79,216,255,.10) 119px 120px),
+    repeating-linear-gradient(90deg, transparent 0 119px, rgba(79,216,255,.10) 119px 120px),
+    var(--bg);
+}
+.hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center}
+.hmeta{font-family:var(--mono); font-size:10.5px; letter-spacing:.28em; color:var(--txt-dim); display:flex; gap:18px; flex-wrap:wrap; margin-bottom:26px}
+.hmeta b{color:var(--cyan); font-weight:500}
+h1{font-family:var(--disp); font-weight:700; text-transform:uppercase; color:#fff; font-size:clamp(38px,5.6vw,74px); line-height:.98; letter-spacing:.01em}
+h1 .amber{color:var(--amber)}
+.lead{margin:26px 0 32px; color:var(--txt-dim); max-width:56ch; font-size:16.5px}
+.lead strong{color:var(--txt); font-weight:600}
+.hero-cta{display:flex; gap:16px; flex-wrap:wrap}
+.stats{display:flex; gap:0; margin-top:44px; border:1px solid var(--line2); width:fit-content; flex-wrap:wrap}
+.stat{padding:14px 22px; border-right:1px solid var(--line2)}
+.stat:last-child{border-right:0}
+.stat b{display:block; font-family:var(--disp); font-size:26px; color:#fff; font-weight:700}
+.stat span{font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:var(--txt-dim)}
+.stat b em{font-style:normal; color:var(--cyan)}
+
+/* drawing detail panel */
+.dpanel{position:relative; border:1px solid var(--line2); background:rgba(8,20,38,.6); padding:18px 18px 10px}
+.dpanel::before,.dpanel::after,.corner::before,.corner::after{content:""; position:absolute; width:14px; height:14px; border-color:var(--cyan); border-style:solid}
+.dpanel::before{top:-1px; left:-1px; border-width:2px 0 0 2px}
+.dpanel::after{top:-1px; right:-1px; border-width:2px 2px 0 0}
+.corner::before{bottom:-1px; left:-1px; border-width:0 0 2px 2px}
+.corner::after{bottom:-1px; right:-1px; border-width:0 2px 2px 0}
+.dtag{display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; letter-spacing:.24em; color:var(--cyan); margin-bottom:10px}
+.dtag span:last-child{color:var(--txt-dim)}
+.drape{width:100%; height:auto; display:block}
+.drape .ln{stroke:var(--cyan); stroke-width:1.4; fill:none}
+.drape .dim{stroke:var(--cyan-dim); stroke-width:1; fill:none}
+.drape .tend{stroke:var(--amber); stroke-width:2.6; fill:none; stroke-linecap:round}
+.drape .chair{stroke:var(--magenta); stroke-width:1.4}
+.drape .faint{stroke:var(--line3); stroke-width:1; fill:none}
+.drape text{font-family:var(--mono); font-size:10px; fill:var(--txt-dim); letter-spacing:.08em}
+.drape text.hot{fill:var(--amber)}
+.dr{stroke-dasharray:1; stroke-dashoffset:1; pathLength:1}
+.hero.in .dr{stroke-dashoffset:0; transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); transition-delay:calc(.25s + var(--i)*.22s)}
+.dtx{opacity:0}
+.hero.in .dtx{opacity:1; transition:opacity .8s ease; transition-delay:calc(1.4s + var(--i)*.2s)}
+/* title block */
+.tblock{display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line2); margin-top:14px; background:rgba(6,15,29,.7)}
+.tcell{padding:7px 10px; border-right:1px solid var(--line2)}
+.tcell:last-child{border-right:0}
+.tcell i{display:block; font-style:normal; font-family:var(--mono); font-size:8px; letter-spacing:.2em; color:var(--txt-dim)}
+.tcell b{font-family:var(--mono); font-size:11px; color:var(--cyan); font-weight:500}
+.scrollcue{position:absolute; left:50%; bottom:22px; transform:translateX(-50%); font-family:var(--mono); font-size:9.5px; letter-spacing:.4em; color:var(--txt-dim); display:flex; flex-direction:column; align-items:center; gap:8px}
+.scrollcue::after{content:""; width:1px; height:34px; background:linear-gradient(var(--cyan),transparent); animation:cue 1.8s ease infinite}
+@keyframes cue{0%{transform:scaleY(0); transform-origin:top}55%{transform:scaleY(1); transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0); transform-origin:bottom}}
+.axis{position:absolute; font-family:var(--mono); font-size:9px; color:var(--line3); letter-spacing:.3em}
+@media(max-width:1020px){.hero-grid{grid-template-columns:1fr}.scrollcue{display:none}}
+
+/* ============ MARQUEE ============ */
+.mq{border-block:1px solid var(--line); background:var(--bg3); overflow:hidden; padding:13px 0}
+.mq-track{display:flex; width:max-content; animation:mq 26s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+.mq-track span{font-family:var(--mono); font-size:11px; letter-spacing:.3em; color:var(--txt-dim); padding:0 28px; white-space:nowrap}
+.mq-track span b{color:var(--amber); font-weight:500}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ============ 3D VIEWPORT ============ */
+.vp-sec{padding:110px 0; background:linear-gradient(var(--bg3),var(--bg))}
+.vp-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:36px}
+.vp-grid{display:grid; grid-template-columns:270px 1fr; gap:20px; align-items:stretch}
+.lpanel{border:1px solid var(--line2); background:var(--bg2); padding:18px; display:flex; flex-direction:column; gap:4px}
+.lp-title{font-family:var(--mono); font-size:10px; letter-spacing:.3em; color:var(--txt-dim); margin-bottom:12px; display:flex; justify-content:space-between}
+.lrow{display:flex; align-items:center; gap:10px; padding:9px 8px; border:1px solid transparent; cursor:pointer; user-select:none; transition:.2s; font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; color:var(--txt)}
+.lrow:hover{border-color:var(--line2); background:rgba(79,216,255,.04)}
+.lrow input{display:none}
+.lsw{width:11px; height:11px; border:1px solid rgba(255,255,255,.25); flex:none; transition:.2s}
+.lrow input:not(:checked)~.lsw{background:transparent!important; opacity:.4}
+.lrow input:not(:checked)~.lname{opacity:.35; text-decoration:line-through}
+.leye{margin-left:auto; font-size:12px; color:var(--cyan); opacity:.8}
+.lrow input:not(:checked)~.leye{opacity:.2}
+.lsep{height:1px; background:var(--line); margin:14px 0}
+/* selection readout */
+.selbox{border:1px dashed var(--line3); padding:12px; font-family:var(--mono); font-size:11px; line-height:1.9; color:var(--txt-dim)}
+.selbox b{color:var(--amber); font-weight:600}
+.selbox .sd{display:block; overflow:hidden}
+.selbox .sd path{stroke:var(--amber); fill:none; stroke-width:2; stroke-dasharray:200; stroke-dashoffset:200}
+.selbox.flash .sd path{animation:sd 1.1s ease forwards}
+@keyframes sd{to{stroke-dashoffset:0}}
+.vp-stage{position:relative; border:1px solid var(--line2); background:
+  repeating-linear-gradient(0deg, transparent 0 39px, rgba(79,216,255,.05) 39px 40px),
+  repeating-linear-gradient(90deg, transparent 0 39px, rgba(79,216,255,.05) 39px 40px),
+  radial-gradient(600px 400px at 50% 40%, rgba(20,50,86,.5), transparent), var(--bg3);
+  min-height:560px; overflow:hidden}
+#gl{position:absolute; inset:0; width:100%; height:100%; cursor:grab; touch-action:none}
+#gl.grabbing{cursor:grabbing}
+.vp-hud{position:absolute; font-family:var(--mono); font-size:9.5px; letter-spacing:.26em; color:var(--txt-dim); pointer-events:none; z-index:3}
+.vp-hud.tl{top:14px; left:16px} .vp-hud.tr{top:14px; right:16px; text-align:right}
+.vp-hud.bl{bottom:14px; left:16px} .vp-hud.br{bottom:14px; right:16px; color:var(--cyan)}
+.vp-tools{position:absolute; top:44px; right:14px; display:flex; flex-direction:column; gap:6px; z-index:4}
+.vp-tools button{width:32px; height:32px; background:rgba(8,20,38,.85); border:1px solid var(--line2); color:var(--cyan); font-family:var(--mono); font-size:14px; transition:.2s}
+.vp-tools button:hover{border-color:var(--cyan); background:rgba(79,216,255,.12)}
+.runbtn{position:absolute; left:16px; bottom:44px; z-index:4; font-family:var(--mono); font-size:10px; letter-spacing:.24em; color:#08131f; background:var(--amber); border:none; padding:10px 16px; font-weight:600; transition:.25s}
+.runbtn:hover{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--cyan)}
+.runbtn.off{background:transparent; color:var(--amber); border:1px solid var(--amber)}
+.vp-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line2); margin-top:20px}
+.vstat{background:var(--bg2); padding:18px 20px}
+.vstat b{font-family:var(--disp); font-size:clamp(22px,2.6vw,32px); color:#fff; font-weight:700}
+.vstat b i{font-style:normal; color:var(--cyan); font-size:.6em; margin-left:4px}
+.vstat span{display:block; font-family:var(--mono); font-size:9.5px; letter-spacing:.24em; color:var(--txt-dim); margin-top:4px}
+@media(max-width:940px){.vp-grid{grid-template-columns:1fr}.vp-stage{min-height:420px}.vp-stats{grid-template-columns:repeat(2,1fr)}}
+
+/* ============ CAPABILITIES BENTO ============ */
+.cap-sec{padding:110px 0; background:var(--bg)}
+.bento{display:grid; grid-template-columns:repeat(12,1fr); gap:16px; margin-top:46px}
+.cell{position:relative; border:1px solid var(--line2); background:var(--bg2); padding:26px; overflow:hidden; transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s}
+.cell::before,.cell::after{content:""; position:absolute; width:12px; height:12px; border:0 solid var(--amber); transition:.3s; z-index:2}
+.cell::before{top:6px; left:6px; border-top-width:2px; border-left-width:2px; opacity:0}
+.cell::after{bottom:6px; right:6px; border-bottom-width:2px; border-right-width:2px; opacity:0}
+.cell:hover{transform:translateY(-5px); border-color:var(--line3); box-shadow:0 18px 40px -20px rgba(0,0,0,.7)}
+.cell:hover::before,.cell:hover::after{opacity:1}
+.cidx{position:absolute; top:18px; right:20px; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--line3); transition:color .3s}
+.cell:hover .cidx{color:var(--amber)}
+.cell h3{font-family:var(--disp); font-size:19px; color:#fff; font-weight:600; text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px}
+.cell p{font-size:13.5px; color:var(--txt-dim); max-width:52ch}
+.c-prof{grid-column:span 7; grid-row:span 2; display:flex; flex-direction:column}
+.c-ext{grid-column:span 5}
+.c-cad{grid-column:span 5}
+.c-dxf{grid-column:span 4}
+.c-xls{grid-column:span 4}
+.c-lic{grid-column:span 4}
+/* profiler */
+.prof-svg{margin-top:16px; flex:1}
+.prof-svg .ln{stroke:var(--cyan); stroke-width:1.3; fill:none}
+.prof-svg .tend{stroke:var(--amber); stroke-width:2.4; fill:none}
+.prof-svg .chair{stroke:var(--magenta); stroke-width:1.3}
+.prof-svg .dim{stroke:var(--cyan-dim); stroke-width:1; fill:none}
+.prof-svg text{font-family:var(--mono); font-size:10px; fill:var(--txt-dim)}
+.prof-svg text.hot{fill:var(--amber)}
+.pctl{display:flex; align-items:center; gap:14px; margin-top:14px; font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; color:var(--txt-dim)}
+input[type=range]{-webkit-appearance:none; appearance:none; flex:1; height:2px; background:var(--line3); outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; background:var(--amber); border:2px solid #08131f; cursor:ew-resize; box-shadow:0 0 0 1px var(--amber)}
+input[type=range]::-moz-range-thumb{width:14px; height:14px; background:var(--amber); border:2px solid #08131f; border-radius:0; cursor:ew-resize}
+.pread{display:flex; gap:18px; margin-top:12px; font-family:var(--mono); font-size:10.5px; color:var(--cyan); letter-spacing:.1em; flex-wrap:wrap}
+.pread b{color:var(--amber); font-weight:600}
+/* extraction chips */
+.fchips{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap}
+.fchip{position:relative; overflow:hidden; border:1px solid var(--line3); padding:9px 14px; font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--cyan)}
+.fchip::after{content:""; position:absolute; inset:0; background:linear-gradient(100deg, transparent 30%, rgba(79,216,255,.22) 50%, transparent 70%); transform:translateX(-110%); animation:scan 3.4s ease infinite}
+.fchip:nth-child(2)::after{animation-delay:1.1s}
+.fchip:nth-child(3)::after{animation-delay:2.2s}
+@keyframes scan{40%,100%{transform:translateX(110%)}}
+.fsrc{font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:var(--txt-dim); margin-top:12px}
+/* mini cad */
+.minicad{position:relative; height:150px; margin-top:16px; border:1px solid var(--line); overflow:hidden; cursor:crosshair;
+  background:
+   repeating-linear-gradient(0deg, transparent 0 14px, rgba(79,216,255,.07) 14px 15px),
+   repeating-linear-gradient(90deg, transparent 0 14px, rgba(79,216,255,.07) 14px 15px), var(--bg3)}
+.minicad svg{position:absolute; inset:0; width:100%; height:100%}
+.chx,.chy{position:absolute; background:rgba(79,216,255,.5); opacity:0; transition:opacity .2s; pointer-events:none}
+.chx{left:0; right:0; height:1px} .chy{top:0; bottom:0; width:1px}
+.chl{position:absolute; font-family:var(--mono); font-size:9px; color:var(--amber); opacity:0; pointer-events:none; letter-spacing:.1em}
+/* dxf sheets */
+.sheets{position:relative; height:150px; margin-top:16px}
+.sheet{position:absolute; inset:8px 26px; border:1px solid var(--cyan-dim); background:var(--bg3); transition:transform .5s cubic-bezier(.2,.7,.2,1); padding:8px}
+.sheet::after{content:""; position:absolute; right:4px; bottom:4px; width:34%; height:16px; border:1px solid var(--line3)}
+.sheet i{display:block; height:1px; background:var(--line3); margin:8px 4px}
+.sheet:nth-child(1){transform:rotate(-4deg) translate(-8px,6px)}
+.sheet:nth-child(2){transform:rotate(2deg) translate(4px,-2px)}
+.sheet:nth-child(3){transform:rotate(0)}
+.cell:hover .sheet:nth-child(1){transform:rotate(-9deg) translate(-22px,10px)}
+.cell:hover .sheet:nth-child(2){transform:rotate(6deg) translate(16px,-6px)}
+.cell:hover .sheet:nth-child(3){transform:rotate(-1deg) translateY(-8px)}
+/* excel rows */
+.xrows{margin-top:18px; display:flex; flex-direction:column; gap:8px}
+.xrow{display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:9.5px; color:var(--txt-dim); letter-spacing:.1em}
+.xrow .bar{height:8px; background:linear-gradient(90deg, var(--cyan-dim), var(--cyan)); width:0; transition:width 1s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d)}
+.in .xrow .bar{width:var(--w)}
+/* license */
+.keyid{margin-top:18px; border:1px dashed var(--line3); padding:14px; font-family:var(--mono); font-size:13px; color:var(--amber); letter-spacing:.12em; min-height:48px}
+.keyid .cur{display:inline-block; width:8px; height:14px; background:var(--amber); vertical-align:-2px; animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.licstat{margin-top:12px; font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; color:var(--txt-dim)}
+.licstat b{color:var(--cyan); font-weight:500}
+@media(max-width:1020px){.c-prof{grid-column:span 12; grid-row:auto}.c-ext,.c-cad{grid-column:span 6}.c-dxf,.c-xls,.c-lic{grid-column:span 6}}
+@media(max-width:680px){.bento>*{grid-column:span 12!important}}
+
+/* ============ HOW / PAPER ============ */
+.paper{background:
+  repeating-linear-gradient(0deg, transparent 0 27px, rgba(18,58,99,.09) 27px 28px),
+  repeating-linear-gradient(90deg, transparent 0 27px, rgba(18,58,99,.09) 27px 28px),
+  var(--paper);
+  color:var(--ink); padding:110px 0}
+.paper .kick{color:var(--ink)} .paper .kick::before{background:var(--ink)}
+.paper .h2{color:var(--ink)}
+.paper .sub{color:var(--ink-soft)}
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:56px; position:relative}
+.step{position:relative; padding:0 34px 0 0}
+.step:not(:last-child)::after{content:""; position:absolute; top:30px; right:-8px; width:calc(100% - 70px); height:1px; left:78px;
+  background:repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 15px); opacity:.55}
+.stepnum{width:60px; height:60px; border:2px solid var(--ink); display:grid; place-items:center; font-family:var(--disp); font-weight:700; font-size:22px; position:relative; background:var(--paper); transition:.3s; margin-bottom:20px}
+.step:hover .stepnum{background:var(--ink); color:var(--paper); transform:rotate(-4deg)}
+.stepnum::after{content:""; position:absolute; inset:-7px; border:1px dashed var(--ink); opacity:.4}
+.step h3{font-family:var(--disp); text-transform:uppercase; font-size:18px; letter-spacing:.04em; margin-bottom:8px}
+.step p{font-size:14px; color:var(--ink-soft)}
+.step code{font-family:var(--mono); background:rgba(18,58,99,.1); padding:1px 6px; font-size:12px; border:1px solid rgba(18,58,99,.25)}
+.stamp{position:absolute; right:-10px; top:-46px; width:118px; height:118px; border:2.5px solid #c0392b; border-radius:50%; color:#c0392b; display:grid; place-items:center; text-align:center; font-family:var(--mono); font-size:9.5px; letter-spacing:.18em; line-height:1.6; transform:rotate(12deg); opacity:.85; background:rgba(255,255,255,.4); animation:stampw 5s ease-in-out infinite}
+@keyframes stampw{50%{transform:rotate(8deg) translateY(-5px)}}
+@media(max-width:860px){.steps{grid-template-columns:1fr; gap:36px}.step::after{display:none}.stamp{top:-20px; right:6px}}
+
+/* field strip */
+.field{margin-top:84px}
+.fstrip{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:34px}
+.fig{position:relative; overflow:hidden; border:1px solid rgba(18,58,99,.35); aspect-ratio:4/3; background:var(--ink)}
+.fig img{width:100%; height:100%; object-fit:cover; filter:grayscale(1) contrast(1.12) brightness(.92); mix-blend-mode:luminosity; animation:kb 16s ease-in-out infinite alternate}
+.fig:nth-child(2) img{animation-delay:-6s} .fig:nth-child(3) img{animation-delay:-11s}
+@keyframes kb{from{transform:scale(1) translate(0,0)}to{transform:scale(1.1) translate(2%,-2%)}}
+.fig figcaption{position:absolute; left:0; bottom:0; right:0; padding:10px 14px; font-family:var(--mono); font-size:9.5px; letter-spacing:.26em; color:#dfe9f5; background:linear-gradient(transparent, rgba(8,19,38,.88)); display:flex; justify-content:space-between}
+.fig figcaption b{color:var(--amber2); font-weight:500}
+@media(max-width:760px){.fstrip{grid-template-columns:1fr}}
+
+/* ============ PRICING ============ */
+.price-sec{padding:120px 0; background:
+  radial-gradient(900px 500px at 50% 0%, rgba(79,216,255,.06), transparent 60%), var(--bg3)}
+.plans{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:56px; align-items:stretch; perspective:1400px}
+.plan{position:relative; border:1px solid var(--line2); background:var(--bg2); padding:36px 30px; display:flex; flex-direction:column; transition:border-color .3s; transform-style:preserve-3d; will-change:transform}
+.plan .ptag{font-family:var(--mono); font-size:10px; letter-spacing:.32em; color:var(--txt-dim)}
+.plan .price{font-family:var(--disp); font-weight:700; font-size:52px; color:#fff; margin:16px 0 2px}
+.plan .price sub{font-size:14px; color:var(--txt-dim); font-family:var(--mono); font-weight:400; letter-spacing:.1em}
+.plan .per{font-family:var(--mono); font-size:10px; letter-spacing:.24em; color:var(--cyan); margin-bottom:24px}
+.plan ul{list-style:none; display:flex; flex-direction:column; gap:12px; margin-bottom:30px; flex:1}
+.plan li{display:flex; gap:12px; font-size:13.5px; color:var(--txt-dim)}
+.plan li::before{content:""; width:14px; height:14px; flex:none; margin-top:3px;
+  background:linear-gradient(45deg, transparent 44%, var(--cyan) 45%, var(--cyan) 55%, transparent 56%),
+             linear-gradient(-45deg, transparent 44%, var(--cyan) 45%, var(--cyan) 55%, transparent 56%)}
+.plan .btn{justify-content:center}
+.plan-hot{border-color:var(--amber); background:linear-gradient(180deg, rgba(255,176,46,.07), rgba(255,176,46,.015)), var(--bg2)}
+.plan-hot .price{color:var(--amber2)}
+.hot-stamp{position:absolute; top:-16px; right:22px; background:var(--amber); color:#08131f; font-family:var(--mono); font-size:9.5px; letter-spacing:.26em; font-weight:600; padding:8px 14px; transform:rotate(3deg); box-shadow:4px 4px 0 rgba(79,216,255,.55)}
+.plan-life{border-style:dashed; border-color:var(--line3)}
+.plan-life .price{color:var(--cyan)}
+.pnote{margin-top:34px; display:flex; gap:26px; flex-wrap:wrap; font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; color:var(--txt-dim)}
+.pnote span::before{content:"◆ "; color:var(--cyan)}
+@media(max-width:920px){.plans{grid-template-columns:1fr; max-width:460px; margin-inline:auto}}
+
+/* ============ FAQ ============ */
+.faq-sec{padding:110px 0; background:var(--bg)}
+.faq-list{margin-top:44px; border-top:1px solid var(--line2)}
+.faq-i{border-bottom:1px solid var(--line2)}
+.faq-q{width:100%; background:none; border:none; color:#fff; display:flex; align-items:center; gap:22px; padding:24px 6px; text-align:left; font-family:var(--disp); font-size:17px; font-weight:600; letter-spacing:.03em; transition:color .25s}
+.faq-q:hover{color:var(--cyan)}
+.faq-q .qi{font-family:var(--mono); font-size:10px; color:var(--txt-dim); letter-spacing:.2em; flex:none; width:44px}
+.faq-q .pm{margin-left:auto; flex:none; width:26px; height:26px; border:1px solid var(--line3); position:relative; transition:.35s}
+.faq-q .pm::before,.faq-q .pm::after{content:""; position:absolute; background:var(--cyan); top:50%; left:50%; transition:.35s}
+.faq-q .pm::before{width:12px; height:1.5px; transform:translate(-50%,-50%)}
+.faq-q .pm::after{width:1.5px; height:12px; transform:translate(-50%,-50%)}
+.faq-i.open .pm{border-color:var(--amber); transform:rotate(90deg)}
+.faq-i.open .pm::after{transform:translate(-50%,-50%) scaleY(0)}
+.faq-a{display:grid; grid-template-rows:0fr; transition:grid-template-rows .55s cubic-bezier(.2,.7,.2,1)}
+.faq-i.open .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden}
+.faq-a p{padding:0 6px 26px 72px; color:var(--txt-dim); font-size:14.5px; max-width:75ch}
+.faq-a a{color:var(--cyan); border-bottom:1px solid var(--cyan-dim)}
+
+/* ============ FOOTER ============ */
+footer{position:relative; border-top:1px solid var(--line); background:var(--bg3); padding:90px 0 130px; overflow:hidden}
+.fbig{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:var(--disp); font-weight:700; font-size:clamp(90px,17vw,260px); color:transparent; -webkit-text-stroke:1px rgba(79,216,255,.09); white-space:nowrap; pointer-events:none; user-select:none}
+.fgrid{position:relative; display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap}
+.fgrid h4{font-family:var(--disp); font-size:clamp(26px,3.4vw,40px); color:#fff; text-transform:uppercase; line-height:1.1; max-width:14ch}
+.fgrid h4 span{color:var(--amber)}
+.fmeta{font-family:var(--mono); font-size:10px; letter-spacing:.22em; color:var(--txt-dim); line-height:2.2}
+.fmeta b{color:var(--cyan); font-weight:500}
+.copy{position:relative; margin-top:70px; padding-top:22px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--mono); font-size:10px; letter-spacing:.18em; color:var(--txt-dim)}
+
+/* status bar */
+.sbar{position:fixed; left:0; right:0; bottom:0; z-index:110; height:30px; background:#050d19; border-top:1px solid var(--line); display:flex; align-items:center; gap:0; font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; color:var(--txt-dim); padding:0 14px}
+.sbar div{padding:0 16px; border-right:1px solid var(--line); white-space:nowrap}
+.sbar b{color:var(--cyan); font-weight:500}
+.sbar .grow{flex:1; border-right:0}
+.sbar .on{color:var(--amber)}
+@media(max-width:860px){.sbar{display:none} footer{padding-bottom:60px}}
+
+/* toast */
+#toast{position:fixed; bottom:52px; left:50%; transform:translate(-50%,20px); z-index:200; background:var(--bg2); border:1px solid var(--cyan); color:var(--txt); font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; padding:14px 22px; opacity:0; pointer-events:none; transition:.4s cubic-bezier(.2,.7,.2,1); box-shadow:6px 6px 0 rgba(79,216,255,.18)}
+#toast.show{opacity:1; transform:translate(-50%,0)}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+  .rv{opacity:1; transform:none}
+  .lm>span{transform:none}
+  .dr{stroke-dashoffset:0!important}
+  .dtx{opacity:1}
+  .mq-track{animation:none; flex-wrap:wrap}
+  .fig img{animation:none}
+  .in .xrow .bar{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav id="nav">
+  <a class="brand" href="#top">
+    <svg width="26" height="20" viewBox="0 0 26 20" fill="none"><path d="M1 4 Q13 22 25 4" stroke="#ffb02e" stroke-width="2.2"/><path d="M1 4 H25" stroke="#4fd8ff" stroke-width="1"/></svg>
+    VORTEX<b>PT</b>
+  </a>
+  <div class="nlinks">
+    <a href="#viewport">VIEWPORT</a>
+    <a href="#features">FEATURES</a>
+    <a href="#how">HOW IT WORKS</a>
+    <a href="#pricing">PRICING</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <button class="lang" id="langBtn" aria-label="Arabic version">عربي</button>
+  <a class="ncta" href="#pricing">GET LICENSED</a>
+</nav>
+
+<!-- ================= HERO : THE SHEET ================= -->
+<header class="hero" id="top">
+  <span class="axis" style="top:86px; left:24px">A ⌁ B ⌁ C ⌁ D ⌁ E</span>
+  <span class="axis" style="bottom:60px; right:24px">GRID 1:100 · NTS</span>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hmeta rv" style="--d:.05s">
+        <span>SHEET <b>S-001</b></span><span>REV <b>3.2</b></span><span>MODE <b>OFFLINE</b></span><span>UNITS <b>mm / MPa</b></span>
+      </div>
+      <h1>
+        <span data-scramble>POST-TENSION</span><br>
+        <span data-scramble class="amber">SHOP DRAWINGS</span>
+      </h1>
+      <p class="lead rv" style="--d:.2s">
+        From <strong>RAM Concept</strong> to site-ready drawings in minutes. Vortex PT extracts your
+        structural model, renders a <strong>live 2D CAD canvas</strong> with tendon drape profiles, and exports
+        <strong>layered AutoCAD DXF</strong> + full <strong>Excel schedules</strong>. Offline, licensed per PC.
+      </p>
+      <div class="hero-cta rv" style="--d:.3s">
+        <a class="btn btn-p" href="#pricing">GET LICENSED →</a>
+        <a class="btn btn-g" href="#how">HOW IT WORKS</a>
+      </div>
+      <div class="stats rv" style="--d:.4s">
+        <div class="stat"><b><em>12</em></b><span>CAD LAYERS</span></div>
+        <div class="stat"><b><em>4</em></b><span>EXCEL SHEETS</span></div>
+        <div class="stat"><b><em>100%</em></b><span>OFFLINE AFTER ACTIVATION</span></div>
+      </div>
+    </div>
+
+    <!-- Detail A : tendon elevation -->
+    <div class="dpanel corner rv" style="--d:.25s">
+      <div class="dtag"><span>DETAIL A — TENDON ELEVATION</span><span>SCALE 1:50</span></div>
+      <svg class="drape" viewBox="0 0 560 300" aria-label="Animated tendon drape elevation drawing">
+        <defs>
+          <pattern id="hx" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8 L8 0" stroke="#16324f" stroke-width="1"/></pattern>
+        </defs>
+        <rect x="20" y="60" width="520" height="130" fill="url(#hx)" opacity=".5"/>
+        <line class="ln dr" pathLength="1" style="--i:0" x1="20" y1="60" x2="540" y2="60"/>
+        <line class="ln dr" pathLength="1" style="--i:1" x1="20" y1="190" x2="540" y2="190"/>
+        <line class="faint dtx" style="--i:0" x1="280" y1="40" x2="280" y2="212" stroke-dasharray="6 5"/>
+        <!-- tendon -->
+        <path class="tend dr" pathLength="1" style="--i:2" d="M36 92 Q280 252 524 92"/>
+        <line class="tend dr" pathLength="1" style="--i:3" x1="12" y1="92" x2="36" y2="92"/>
+        <line class="tend dr" pathLength="1" style="--i:3" x1="524" y1="92" x2="548" y2="92"/>
+        <!-- anchors -->
+        <rect class="ln dtx" style="--i:1" x="6" y="83" width="9" height="18" fill="none"/>
+        <g class="dtx" style="--i:2"><rect x="543" y="81" width="12" height="22" fill="none" class="ln"/><path d="M549 81 L549 103" class="ln"/><path d="M543 86 L555 97 M543 97 L555 86" class="dim"/></g>
+        <!-- chairs -->
+        <line class="chair dr" pathLength="1" style="--i:4" x1="158" y1="190" x2="158" y2="154"/>
+        <line class="chair dr" pathLength="1" style="--i:4" x1="280" y1="190" x2="280" y2="174"/>
+        <line class="chair dr" pathLength="1" style="--i:4" x1="402" y1="190" x2="402" y2="154"/>
+        <line class="chair dr" pathLength="1" style="--i:4" x1="150" y1="190" x2="166" y2="190"/>
+        <line class="chair dr" pathLength="1" style="--i:4" x1="272" y1="190" x2="288" y2="190"/>
+        <line class="chair dr" pathLength="1" style="--i:4" x1="394" y1="190" x2="410" y2="190"/>
+        <!-- e dimension -->
+        <line class="dim dtx" style="--i:3" x1="280" y1="92" x2="322" y2="92"/>
+        <line class="dim dtx" style="--i:3" x1="280" y1="172" x2="322" y2="172"/>
+        <line class="dim dr" pathLength="1" style="--i:5" x1="316" y1="92" x2="316" y2="172"/>
+        <!-- length dimension -->
+        <line class="dim dr" pathLength="1" style="--i:5" x1="36" y1="228" x2="524" y2="228"/>
+        <line class="dim dtx" style="--i:4" x1="36" y1="220" x2="36" y2="236"/>
+        <line class="dim dtx" style="--i:4" x1="524" y1="220" x2="524" y2="236"/>
+        <!-- labels -->
+        <text class="dtx" style="--i:2" x="6" y="48">DEAD END</text>
+        <text class="dtx" style="--i:2" x="474" y="48">LIVE END — STRESS</text>
+        <text class="hot dtx" style="--i:5" x="326" y="136">e = 90 mm</text>
+        <text class="dtx" style="--i:5" x="238" y="250">L = 38.200 m</text>
+        <text class="dtx" style="--i:6" x="44" y="80">4 × Ø12.7</text>
+        <text class="dtx" style="--i:6" x="120" y="212" fill="#ff5dc8">CHAIRS @ 1.2 m — H = 60</text>
+      </svg>
+      <div class="tblock">
+        <div class="tcell"><i>DWG NO.</i><b>VP-2026-001</b></div>
+        <div class="tcell"><i>DRAWN BY</i><b>VORTEX PT</b></div>
+        <div class="tcell"><i>DATE</i><b id="tbDate">—</b></div>
+        <div class="tcell"><i>STATUS</i><b style="color:var(--amber)">FOR CONSTRUCTION</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="scrollcue">SCROLL</div>
+</header>
+
+<!-- ================= MARQUEE ================= -->
+<div class="mq" aria-hidden="true">
+  <div class="mq-track" id="mqTrack">
+    <span>RAM CONCEPT <b>.CPT</b></span><span>⌁</span><span>ADAPT-BUILDER <b>.INP</b></span><span>⌁</span>
+    <span>AUTOCAD <b>DXF</b> EXPORT</span><span>⌁</span><span>EXCEL <b>BBS</b> + CSV</span><span>⌁</span>
+    <span>PARABOLIC <b>DRAPE</b></span><span>⌁</span><span>CHAIR <b>HEIGHTS</b></span><span>⌁</span>
+    <span><b>ELONGATION</b> COMPUTE</span><span>⌁</span><span>LIVE / DEAD <b>ANCHORS</b></span><span>⌁</span>
+    <span><b>100%</b> OFFLINE</span><span>⌁</span>
+  </div>
+</div>
+
+<!-- ================= 01 · 3D VIEWPORT ================= -->
+<section class="vp-sec" id="viewport">
+  <div class="wrap">
+    <div class="vp-head">
+      <div>
+        <div class="kick rv">01 — MODEL VIEWPORT</div>
+        <h2 class="h2"><span class="lm"><span>Rotate the slab.</span></span><span class="lm" style="--d:.12s"><span>Click a tendon.</span></span></h2>
+        <p class="sub rv" style="--d:.15s">This is what extraction feels like — the same model Vortex PT pulls from your <span class="mono" style="color:var(--cyan)">.cpt</span> file, draped, chaired and ready to detail. Drag to orbit, scroll to zoom, pick any strand.</p>
+      </div>
+      <div class="rv mono" style="--d:.2s; font-size:10px; letter-spacing:.26em; color:var(--txt-dim); text-align:right; line-height:2.4">
+        PERSPECTIVE · ORBIT<br>LAYER: <b style="color:var(--amber)">PT-TENDONS-X</b><br>UNITS: m · mm
+      </div>
+    </div>
+
+    <div class="vp-grid rv" style="--d:.1s">
+      <aside class="lpanel">
+        <div class="lp-title"><span>LAYERS</span><span style="color:var(--amber)">6/6</span></div>
+        <label class="lrow"><input type="checkbox" checked data-layer="slab"><span class="lsw" style="background:#4fd8ff"></span><span class="lname">SLAB-GRID</span><span class="leye">◉</span></label>
+        <label class="lrow"><input type="checkbox" checked data-layer="tendX"><span class="lsw" style="background:#ffb02e"></span><span class="lname">PT-TENDONS-X</span><span class="leye">◉</span></label>
+        <label class="lrow"><input type="checkbox" checked data-layer="tendZ"><span class="lsw" style="background:#2f8fc0"></span><span class="lname">PT-TENDONS-Z</span><span class="leye">◉</span></label>
+        <label class="lrow"><input type="checkbox" checked data-layer="cols"><span class="lsw" style="background:#7d99b5"></span><span class="lname">COLUMNS</span><span class="leye">◉</span></label>
+        <label class="lrow"><input type="checkbox" checked data-layer="chairs"><span class="lsw" style="background:#ff5dc8"></span><span class="lname">CHAIRS</span><span class="leye">◉</span></label>
+        <label class="lrow"><input type="checkbox" checked data-layer="dims"><span class="lsw" style="background:#3a6c9e"></span><span class="lname">DIMENSIONS</span><span class="leye">◉</span></label>
+        <div class="lsep"></div>
+        <div class="lp-title"><span>SELECTION</span><span id="selDot" style="color:var(--txt-dim)">○</span></div>
+        <div class="selbox" id="selBox">
+          <svg class="sd" width="100%" height="34" viewBox="0 0 200 34"><path d="M4 8 Q100 52 196 8"/></svg>
+          <span id="selText">NO SELECTION —<br>click any tendon in the viewport</span>
+        </div>
+      </aside>
+
+      <div class="vp-stage" id="vpStage">
+        <canvas id="gl"></canvas>
+        <div class="vp-hud tl">MODEL: ROOF FLOOR · VP-2026-001</div>
+        <div class="vp-hud tr">DRAG ORBIT · WHEEL ZOOM<br>CLICK = INSPECT</div>
+        <div class="vp-hud bl" id="vpCoords">θ 028° · φ 064° · R 30.0</div>
+        <div class="vp-hud br">▣ WEBGL · 60 FPS TARGET</div>
+        <div class="vp-tools">
+          <button id="zIn" aria-label="Zoom in">+</button>
+          <button id="zOut" aria-label="Zoom out">−</button>
+          <button id="zReset" aria-label="Reset view">⌂</button>
+        </div>
+        <button class="runbtn" id="runBtn">▶ RUN STRESSING SEQUENCE</button>
+      </div>
+    </div>
+
+    <div class="vp-stats rv" style="--d:.2s">
+      <div class="vstat"><b><span class="count" data-to="12">0</span><i>TL</i></b><span>TENDONS EXTRACTED</span></div>
+      <div class="vstat"><b><span class="count" data-to="684">0</span><i>m</i></b><span>TOTAL TENDON LENGTH</span></div>
+      <div class="vstat"><b><span class="count" data-to="540">0</span><i>m²</i></b><span>SLAB AREA</span></div>
+      <div class="vstat"><b><span class="count" data-to="96">0</span><i>ea</i></b><span>CHAIRS SCHEDULED</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 · CAPABILITIES ================= -->
+<section class="cap-sec" id="features">
+  <div class="wrap">
+    <div class="kick rv">02 — CAPABILITIES</div>
+    <h2 class="h2"><span class="lm"><span>Everything between</span></span><span class="lm" style="--d:.12s"><span>model and site.</span></span></h2>
+    <p class="sub rv" style="--d:.15s">One desktop app covering the full post-tension detailing workflow — extraction, inspection, profiling, and export.</p>
+
+    <div class="bento">
+      <!-- profiler (big) -->
+      <article class="cell c-prof rv">
+        <span class="cidx">F-01</span>
+        <h3>Drape Profiler</h3>
+        <p>Parabolic drape curves, chair heights, live vs dead anchors and elongation computation. Drag the drape depth — the profile, chairs and elongation recalculate live.</p>
+        <svg class="prof-svg" viewBox="0 0 560 240">
+          <line class="ln" x1="20" y1="60" x2="540" y2="60"/>
+          <line class="ln" x1="20" y1="170" x2="540" y2="170"/>
+          <line class="dim" x1="280" y1="42" x2="280" y2="188" stroke-dasharray="5 5"/>
+          <path id="pp" class="tend" d="M36 78 Q280 258 524 78"/>
+          <line id="pc1" class="chair" x1="158" y1="170" x2="158" y2="140"/>
+          <line id="pc2" class="chair" x1="280" y1="170" x2="280" y2="155"/>
+          <line id="pc3" class="chair" x1="402" y1="170" x2="402" y2="140"/>
+          <line class="dim" id="pd1" x1="316" y1="78" x2="316" y2="155"/>
+          <text id="pe" class="hot" x="326" y="120">e = 90 mm</text>
+          <text x="44" y="52">4 × Ø12.7 — TYPICAL BAND</text>
+          <text id="pch" x="120" y="196" fill="#ff5dc8">CHAIR H = 55 mm</text>
+        </svg>
+        <div class="pctl"><span>MIDSPAN DRAPE</span><input type="range" id="prange" min="40" max="140" value="90" step="1" aria-label="Adjust drape depth"><span id="prangeVal" style="color:var(--amber)">90 mm</span></div>
+        <div class="pread"><span>ELONG ≈ <b id="pelong">212 mm</b></span><span>ANCHOR: <b>LIVE / DEAD</b></span><span>f<sub>pu</sub> = <b>1860 MPa</b></span></div>
+      </article>
+
+      <!-- extraction -->
+      <article class="cell c-ext rv" style="--d:.08s">
+        <span class="cidx">F-02</span>
+        <h3>Direct Model Extraction</h3>
+        <p>RAM Concept (.cpt) plus ADAPT-Builder via .inp — slabs, columns, walls, beams, tendons, rebar.</p>
+        <div class="fchips"><span class="fchip">MODEL.CPT</span><span class="fchip">EXPORT.INP</span><span class="fchip">REBAR.CSV</span></div>
+        <div class="fsrc">SOURCE ▸ RAM CONCEPT · ADAPT-BUILDER</div>
+      </article>
+
+      <!-- live cad -->
+      <article class="cell c-cad rv" style="--d:.14s">
+        <span class="cidx">F-03</span>
+        <h3>Live CAD Canvas</h3>
+        <p>Pan, zoom, layer toggles. Click any tendon to inspect it — move your cursor inside:</p>
+        <div class="minicad" id="minicad">
+          <svg viewBox="0 0 300 150" preserveAspectRatio="none"><path d="M10 40 Q150 130 290 40" stroke="#ffb02e" stroke-width="2" fill="none"/><line x1="10" y1="24" x2="290" y2="24" stroke="#2f8fc0"/><line x1="10" y1="126" x2="290" y2="126" stroke="#2f8fc0"/></svg>
+          <div class="chx" id="chx"></div><div class="chy" id="chy"></div><div class="chl" id="chl">X:0 Y:0</div>
+        </div>
+      </article>
+
+      <!-- dxf -->
+      <article class="cell c-dxf rv" style="--d:.1s">
+        <span class="cidx">F-04</span>
+        <h3>DXF Shop Drawings</h3>
+        <p>Layered AutoCAD sheets with border, title block and embedded tendon schedule table.</p>
+        <div class="sheets">
+          <div class="sheet"><i></i><i style="width:60%"></i><i style="width:80%"></i></div>
+          <div class="sheet"><i></i><i style="width:70%"></i><i style="width:45%"></i></div>
+          <div class="sheet"><i></i><i style="width:55%"></i><i style="width:75%"></i></div>
+        </div>
+      </article>
+
+      <!-- excel -->
+      <article class="cell c-xls rv" style="--d:.16s">
+        <span class="cidx">F-05</span>
+        <h3>Excel + BBS</h3>
+        <p>Takeoff summary, PT schedule, chair heights detail and full rebar bending schedules + CSV.</p>
+        <div class="xrows">
+          <div class="xrow"><span style="width:70px">TAKEOFF</span><span class="bar" style="--w:88%; --d:.1s"></span><span>88%</span></div>
+          <div class="xrow"><span style="width:70px">PT SCHED</span><span class="bar" style="--w:72%; --d:.25s"></span><span>72%</span></div>
+          <div class="xrow"><span style="width:70px">CHAIRS</span><span class="bar" style="--w:54%; --d:.4s"></span><span>54%</span></div>
+          <div class="xrow"><span style="width:70px">REBAR BBS</span><span class="bar" style="--w:95%; --d:.55s"></span><span>95%</span></div>
+        </div>
+      </article>
+
+      <!-- licensing -->
+      <article class="cell c-lic rv" style="--d:.22s">
+        <span class="cidx">F-06</span>
+        <h3>Per-PC Licensing</h3>
+        <p>Machine-locked keys, offline activation, expiry reminders, free updates in-period.</p>
+        <div class="keyid"><span id="keyid"></span><span class="cur"></span></div>
+        <div class="licstat">STATUS: <b>OFFLINE · MACHINE-LOCKED</b></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 03 · HOW (PAPER) ================= -->
+<section class="paper" id="how">
+  <div class="wrap">
+    <div class="kick rv">03 — GET STARTED</div>
+    <h2 class="h2"><span class="lm"><span>Licensed in three steps.</span></span></h2>
+    <p class="sub rv" style="--d:.12s">No account maze, no waiting. Pay, send one ID, start drawing.</p>
+
+    <div class="steps">
+      <div class="stamp rv" style="--d:.5s">7-DAY<br>FREE TRIAL<br>FULL FEATURES</div>
+      <div class="step rv">
+        <div class="stepnum">01</div>
+        <h3>Order &amp; confirm</h3>
+        <p>Pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.</p>
+      </div>
+      <div class="step rv" style="--d:.12s">
+        <div class="stepnum">02</div>
+        <h3>Send your Machine&nbsp;ID</h3>
+        <p>Install Vortex PT, click <code>Open Model</code> — copy the <code>Machine ID</code> from the Activation window and WhatsApp it to us with your name.</p>
+      </div>
+      <div class="step rv" style="--d:.24s">
+        <div class="stepnum">03</div>
+        <h3>Activate &amp; draw</h3>
+        <p>We reply with your key — paste, <strong>Activate</strong>, done. Offline forever after.</p>
+      </div>
+    </div>
+
+    <!-- field strip -->
+    <div class="field">
+      <div class="kick rv">FROM MODEL TO SITE</div>
+      <div class="fstrip">
+        <figure class="fig rv"><img src="https://picsum.photos/seed/pt-analysis-model/800/600" alt="Structural analysis model" loading="lazy"><figcaption><span><b>01</b> MODEL — RAM CONCEPT</span><span>.CPT</span></figcaption></figure>
+        <figure class="fig rv" style="--d:.12s"><img src="https://picsum.photos/seed/pt-shop-drawing-desk/800/600" alt="Shop drawing production" loading="lazy"><figcaption><span><b>02</b> SHEET — DXF + SCHEDULES</span><span>.DXF</span></figcaption></figure>
+        <figure class="fig rv" style="--d:.24s"><img src="https://picsum.photos/seed/pt-stressing-site/800/600" alt="Post-tension stressing on site" loading="lazy"><figcaption><span><b>03</b> SITE — STRESSING DAY</span><span>FIELD</span></figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 · PRICING ================= -->
+<section class="price-sec" id="pricing">
+  <div class="wrap">
+    <div class="kick rv">04 — PRICING</div>
+    <h2 class="h2"><span class="lm"><span>One license. One PC.</span></span><span class="lm" style="--d:.12s"><span>No subscription traps.</span></span></h2>
+    <p class="sub rv" style="--d:.15s">Every plan ships the full toolset — extraction, CAD canvas, drape profiler, DXF + Excel exports.</p>
+
+    <div class="plans">
+      <article class="plan tilt rv">
+        <div class="ptag">PLAN / MONTHLY</div>
+        <div class="price">$25<sub> USD</sub></div>
+        <div class="per">PER 30 DAYS</div>
+        <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
+        <a class="btn btn-g wa-buy" data-plan="Monthly $25" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Monthly%20plan">BUY MONTHLY</a>
+      </article>
+
+      <article class="plan plan-hot tilt rv" style="--d:.12s">
+        <div class="hot-stamp">MOST POPULAR</div>
+        <div class="ptag">PLAN / YEARLY</div>
+        <div class="price">$250<sub> USD</sub></div>
+        <div class="per">PER 12 MONTHS · SAVE $50</div>
+        <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>Priority WhatsApp support</li></ul>
+        <a class="btn btn-p wa-buy" data-plan="Yearly $250" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Yearly%20plan">BUY YEARLY</a>
+      </article>
+
+      <article class="plan plan-life tilt rv" style="--d:.24s">
+        <div class="ptag">PLAN / LIFETIME</div>
+        <div class="price">$1000<sub> USD</sub></div>
+        <div class="per">PAY ONCE · YOURS FOREVER</div>
+        <ul><li>Full features</li><li>1 PC, forever</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
+        <a class="btn btn-g wa-buy" data-plan="Lifetime $1000" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Lifetime%20license">BUY LIFETIME</a>
+      </article>
+    </div>
+
+    <div class="pnote rv" style="--d:.3s">
+      <span>REPLACING YOUR PC? MESSAGE US TO TRANSFER YOUR LICENSE</span>
+      <span>COMPANY MULTI-SEAT DEALS ON WHATSAPP</span>
+      <span>PAID KEYS NON-REFUNDABLE AFTER DELIVERY — TRY THE 7-DAY TRIAL FIRST</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 · FAQ ================= -->
+<section class="faq-sec" id="faq">
+  <div class="wrap">
+    <div class="kick rv">05 — FAQ</div>
+    <h2 class="h2"><span class="lm"><span>Questions, answered.</span></span></h2>
+
+    <div class="faq-list rv" style="--d:.1s">
+      <div class="faq-i">
+        <button class="faq-q" aria-expanded="false"><span class="qi">Q.01</span>Does it need internet?<span class="pm"></span></button>
+        <div class="faq-a"><div><p>Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.</p></div></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" aria-expanded="false"><span class="qi">Q.02</span>Which files does it open?<span class="pm"></span></button>
+        <div class="faq-a"><div><p>RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.</p></div></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" aria-expanded="false"><span class="qi">Q.03</span>What exactly do I export?<span class="pm"></span></button>
+        <div class="faq-a"><div><p>Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.</p></div></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" aria-expanded="false"><span class="qi">Q.04</span>How do updates work?<span class="pm"></span></button>
+        <div class="faq-a"><div><p>Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed.</p></div></div>
+      </div>
+      <div class="faq-i">
+        <button class="faq-q" aria-expanded="false"><span class="qi">Q.05</span>Refund policy?<span class="pm"></span></button>
+        <div class="faq-a"><div><p>Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT">WhatsApp</a>.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="fbig" aria-hidden="true">VORTEX PT</div>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>Ready to <span>detail?</span></h4>
+        <p class="sub" style="margin:16px 0 28px">Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.</p>
+        <a class="btn btn-p" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT">◈ CHAT ON WHATSAPP</a>
+      </div>
+      <div class="fmeta">
+        <b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br>
+        <b>INPUT</b> — .CPT · .INP<br>
+        <b>OUTPUT</b> — .DXF · .XLSX · .CSV<br>
+        <b>NETWORK</b> — NOT REQUIRED<br>
+        <b>SHEET</b> — S-001 / REV 3.2 / 2026
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.</span>
+      <span>⌖ DRAWN OFFLINE · CHECKED ON SITE</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CAD status bar -->
+<div class="sbar" aria-hidden="true">
+  <div>X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b></div>
+  <div>LAYER: <b>PT-TENDONS</b></div>
+  <div>SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
+  <div class="grow"></div>
+  <div>LIC: <b>TRIAL · 7 DAYS</b></div>
+  <div>VORTEX PT v3.2</div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $  = (s,c)=> (c||document).querySelector(s);
+const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
+
+/* ---------- date / title block ---------- */
+const tb = $('#tbDate');
+if(tb){ const d=new Date(); tb.textContent = d.toISOString().slice(0,10); }
+
+/* ---------- nav ---------- */
+const nav = $('#nav');
+addEventListener('scroll', ()=> nav.classList.toggle('scrolled', scrollY>30), {passive:true});
+
+/* ---------- toast ---------- */
+const toast = $('#toast'); let toastT;
+function say(msg){ toast.textContent=msg; toast.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('show'),2800); }
+$('#langBtn').addEventListener('click', ()=> say('النسخة العربية قيد التطوير — Arabic UI ships in the next build.'));
+
+/* ---------- scramble decode ---------- */
+const GLYPHS = '▓▒░<>/\\|=+×#01';
+function scramble(el){
+  const final = el.dataset.text || el.textContent;
+  el.dataset.text = final;
+  if(RM){ el.textContent = final; return; }
+  let frame=0; const total = final.length*3+14;
+  (function tick(){
+    let out='';
+    for(let i=0;i<final.length;i++){
+      if(final[i]===' '){ out+=' '; continue; }
+      out += (frame > i*3+10) ? final[i] : GLYPHS[(Math.random()*GLYPHS.length)|0];
+    }
+    el.textContent = out;
+    if(frame++ < total) requestAnimationFrame(tick); else el.textContent = final;
+  })();
+}
+setTimeout(()=> $$('.hero [data-scramble]').forEach((el,i)=> setTimeout(()=>scramble(el), i*260)), 200);
+setTimeout(()=> $('.hero').classList.add('in'), 120);
+
+/* ---------- marquee duplicate ---------- */
+const mq = $('#mqTrack'); if(mq) mq.innerHTML += mq.innerHTML;
+
+/* ---------- counters ---------- */
+function runCount(el){
+  const to = +el.dataset.to;
+  if(RM){ el.textContent = to; return; }
+  const t0 = performance.now(), dur=1300;
+  (function step(t){
+    const p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(to*e);
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ---------- typewriter (machine id) ---------- */
+const KEY = 'VX-88F2-AC41-PT07'; let typed=false;
+function typeKey(){
+  if(typed) return; typed=true;
+  const el = $('#keyid'); if(!el) return;
+  if(RM){ el.textContent = KEY; return; }
+  let i=0; (function t(){ el.textContent = KEY.slice(0,++i); if(i<KEY.length) setTimeout(t,55); })();
+}
+
+/* ---------- reveal observer ---------- */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('in');
+    $$('.count', e.target).forEach(runCount);
+    if(e.target.querySelector('#keyid')) typeKey();
+    io.unobserve(e.target);
+  });
+},{threshold:.18});
+$$('.rv').forEach(el=>io.observe(el));
+
+/* ---------- drape profiler (live) ---------- */
+const pr = $('#prange');
+if(pr){
+  const qy=(t,yc)=> (1-t)*(1-t)*78 + 2*(1-t)*t*yc + t*t*78;
+  pr.addEventListener('input', ()=>{
+    const v=+pr.value, drop=v*0.9, yc=78+2*drop;
+    $('#pp').setAttribute('d', `M36 78 Q280 ${yc} 524 78`);
+    const y1=qy(0.25,yc), y2=qy(0.5,yc), y3=qy(0.75,yc);
+    const c1=$('#pc1'),c2=$('#pc2'),c3=$('#pc3');
+    c1.setAttribute('y2',y1); c2.setAttribute('y2',y2); c3.setAttribute('y2',y3);
+    $('#pd1').setAttribute('y2',y2);
+    $('#pe').textContent = `e = ${v} mm`;
+    $('#pe').setAttribute('y', Math.max(100,(78+y2)/2));
+    $('#pch').textContent = `CHAIR H = ${Math.max(25,v-35)} mm`;
+    $('#prangeVal').textContent = v+' mm';
+    $('#pelong').textContent = Math.round(v*2.35)+' mm';
+  });
+}
+
+/* ---------- mini CAD crosshair ---------- */
+const mc = $('#minicad');
+if(mc){
+  const chx=$('#chx'), chy=$('#chy'), chl=$('#chl');
+  mc.addEventListener('mousemove', e=>{
+    const r=mc.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+    chx.style.top=y+'px'; chy.style.left=x+'px';
+    chx.style.opacity=chy.style.opacity=chl.style.opacity=1;
+    chl.style.left=(x+10)+'px'; chl.style.top=(y+10)+'px';
+    chl.textContent=`X:${(x*12).toFixed(0)} Y:${(y*12).toFixed(0)}`;
+  });
+  mc.addEventListener('mouseleave', ()=>{ chx.style.opacity=chy.style.opacity=chl.style.opacity=0; });
+}
+
+/* ---------- pricing tilt ---------- */
+if(!RM && matchMedia('(pointer:fine)').matches){
+  $$('.tilt').forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      const r=card.getBoundingClientRect();
+      const rx=((e.clientY-r.top)/r.height-.5)*-7, ry=((e.clientX-r.left)/r.width-.5)*7;
+      card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', ()=> card.style.transform='');
+  });
+}
+
+/* ---------- FAQ accordion ---------- */
+$$('.faq-q').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const item=btn.parentElement, open=item.classList.contains('open');
+    $$('.faq-i.open').forEach(i=>{ i.classList.remove('open'); $('.faq-q',i).setAttribute('aria-expanded','false'); });
+    if(!open){ item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+
+/* ---------- status bar coords ---------- */
+const sbx=$('#sbx'), sby=$('#sby'); let raf=null;
+if(sbx){
+  addEventListener('mousemove', e=>{
+    if(raf) return;
+    raf=requestAnimationFrame(()=>{ raf=null;
+      sbx.textContent=(e.clientX*3.14).toFixed(2).padStart(7,'0');
+      sby.textContent=(e.clientY*2.72).toFixed(2).padStart(7,'0');
+    });
+  },{passive:true});
+}
+
+/* ================= THREE.JS VIEWPORT ================= */
+if(typeof THREE !== 'undefined' && $('#gl')){
+  const canvas=$('#gl'), stage=$('#vpStage');
+  const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0x060f1d, 38, 90);
+  const camera=new THREE.PerspectiveCamera(42,1,.1,200);
+
+  const root=new THREE.Group(); scene.add(root);
+  const G={slab:new THREE.Group(), cols:new THREE.Group(), tendX:new THREE.Group(),
+           tendZ:new THREE.Group(), chairs:new THREE.Group(), dims:new THREE.Group()};
+  Object.values(G).forEach(g=>root.add(g));
+
+  const W=26,D=16,T=.6,SLAB_Y=3,AMP=.16;
+  const lineMat=(c,o)=>new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o===undefined?1:o});
+
+  /* slab */
+  const box=new THREE.BoxGeometry(W,T,D);
+  G.slab.add(new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0x0d2b4a,transparent:true,opacity:.4,depthWrite:false})));
+  G.slab.add(new THREE.LineSegments(new THREE.EdgesGeometry(box),lineMat(0x4fd8ff,.85)));
+  (function grids(){
+    const pos=[];
+    for(let y of [SLAB_Y+T/2+.01, SLAB_Y-T/2-.01]){
+      for(let x=-W/2;x<=W/2;x+=2) pos.push(x,y,-D/2, x,y,D/2);
+      for(let z=-D/2;z<=D/2;z+=2) pos.push(-W/2,y,z, W/2,y,z);
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos,3));
+    G.slab.add(new THREE.LineSegments(g,lineMat(0x1d4b78,.55)));
+  })();
+
+  /* columns */
+  [-9,0,9].forEach(x=>[-4.5,4.5].forEach(z=>{
+    const h=SLAB_Y-T/2, geo=new THREE.CylinderGeometry(.26,.3,h,10);
+    const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x14314f}));
+    m.position.set(x,h/2,z); G.cols.add(m);
+    const w=new THREE.LineSegments(new THREE.EdgesGeometry(geo),lineMat(0x3a6c9e,.6));
+    w.position.copy(m.position); G.cols.add(w);
+  }));
+
+  /* tendon wave curves */
+  const yX=x=> SLAB_Y + AMP*Math.cos(2*Math.PI*x/9);
+  const yZ=z=> SLAB_Y-.12 - .14*Math.cos(Math.PI*z/4.5);
+  const tubes=[], curvesX=[];
+  const mkCurve=pts=>new THREE.CatmullRomCurve3(pts);
+
+  for(let i=0;i<7;i++){
+    const z=-6+i*2, pts=[];
+    for(let j=0;j<=26;j++){ const x=-12.4+j*(24.8/26); pts.push(new THREE.Vector3(x,yX(x),z)); }
+    const curve=mkCurve(pts); curvesX.push(curve);
+    const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,72,.045,8),
+      new THREE.MeshBasicMaterial({color:0xffb02e}));
+    tube.userData={idx:i+1, base:0xffb02e, curve, len:curve.getLength()};
+    G.tendX.add(tube); tubes.push(tube);
+    [-12.4,12.4].forEach(x=>{
+      const cap=new THREE.Mesh(new THREE.BoxGeometry(.16,.22,.22),
+        new THREE.MeshBasicMaterial({color:x>0?0xffd166:0x4fd8ff}));
+      cap.position.set(x,yX(x),z); G.tendX.add(cap);
+    });
+  }
+  [-10,-5,0,5,10].forEach(x=>{
+    const pts=[];
+    for(let j=0;j<=20;j++){ const z=-7.4+j*(14.8/20); pts.push(new THREE.Vector3(x,yZ(z),z)); }
+    const curve=mkCurve(pts);
+    const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,60,.028,8),
+      new THREE.MeshBasicMaterial({color:0x2f8fc0}));
+    tube.userData={idx:'D'+(x+10), base:0x2f8fc0, curve, len:curve.getLength()};
+    G.tendZ.add(tube); tubes.push(tube);
+  });
+
+  /* chairs */
+  (function(){
+    const pos=[];
+    for(let i=0;i<7;i++){ const z=-6+i*2;
+      [-4.5,4.5].forEach(x=>{ pos.push(x,yX(x)-.05,z, x,SLAB_Y-T/2,z); }); }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    G.chairs.add(new THREE.LineSegments(g,lineMat(0xff5dc8,.85)));
+  })();
+
+  /* dimensions */
+  (function(){
+    const y=.02, o=2, pos=[], X=W/2+o, Z=D/2+o;
+    pos.push(-W/2,y,-Z, W/2,y,-Z,  W/2,y,Z, -W/2,y,Z, -W/2,y,Z, -W/2,y,-Z);
+    for(let x=-9;x<=9;x+=9) pos.push(x,y,-D/2, x,y,-Z);
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    G.dims.add(new THREE.LineSegments(g,lineMat(0x3a6c9e,.8)));
+  })();
+
+  /* stressing pulses */
+  const pulses=curvesX.map(c=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.1,10,10),new THREE.MeshBasicMaterial({color:0xffe08a}));
+    root.add(m); m.visible=false; m.userData.curve=c; return m;
+  });
+  let stressing=false;
+  const runBtn=$('#runBtn');
+  function setStress(on){
+    stressing=on;
+    pulses.forEach(p=>p.visible=on&&!RM);
+    runBtn.textContent = on? '■ STOP SEQUENCE' : '▶ RUN STRESSING SEQUENCE';
+    runBtn.classList.toggle('off',!on);
+  }
+  runBtn.addEventListener('click', ()=>{ setStress(!stressing); say(stressing?'Stressing sequence running — jacks traversing bands.':'Sequence stopped.'); });
+
+  /* orbit state */
+  let rotX=-.52, rotY=.55, tX=rotX, tY=rotY, dist=30, tDist=30, lastTouch=0;
+  let dragging=false, px=0, py=0, moved=0;
+
+  canvas.addEventListener('pointerdown', e=>{ dragging=true; moved=0; px=e.clientX; py=e.clientY; canvas.classList.add('grabbing'); canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    const dx=e.clientX-px, dy=e.clientY-py; px=e.clientX; py=e.clientY; moved+=Math.abs(dx)+Math.abs(dy);
+    tY+=dx*.005; tX=Math.max(-1.25,Math.min(.15,tX-dy*.004)); lastTouch=performance.now();
+  });
+  canvas.addEventListener('pointerup', e=>{
+    dragging=false; canvas.classList.remove('grabbing');
+    if(moved<6) pick(e);
+  });
+  canvas.addEventListener('wheel', e=>{ e.preventDefault(); tDist=Math.max(16,Math.min(48,tDist+e.deltaY*.02)); lastTouch=performance.now(); },{passive:false});
+  $('#zIn').onclick =()=>{ tDist=Math.max(16,tDist-3); };
+  $('#zOut').onclick=()=>{ tDist=Math.min(48,tDist+3); };
+  $('#zReset').onclick=()=>{ tX=-.52; tY=.55; tDist=30; };
+
+  /* picking */
+  const ray=new THREE.Raycaster(), ndc=new THREE.Vector2();
+  let selected=null;
+  const selBox=$('#selBox'), selText=$('#selText'), selDot=$('#selDot');
+  function pick(e){
+    const r=canvas.getBoundingClientRect();
+    ndc.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1);
+    ray.setFromCamera(ndc,camera);
+    const hits=ray.intersectObjects(tubes);
+    if(selected){ selected.material.color.setHex(selected.userData.base); selected=null; }
+    if(!hits.length){ selDot.textContent='○'; selText.innerHTML='NO SELECTION —<br>click any tendon in the viewport'; return; }
+    selected=hits[0].object;
+    selected.material.color.setHex(0xfff0b0);
+    const u=selected.userData, L=(u.len*1.5).toFixed(1);
+    const e_mm=120+((u.idx-1)||0)*8, ch=Math.round(e_mm*.62), el=Math.round(L*5.6);
+    selDot.textContent='●'; selDot.style.color='var(--amber)';
+    selText.innerHTML=`<b>${typeof u.idx==='number'?'TL-0':'T-'}${u.idx}</b> · 4 × Ø12.7 mm<br>L = ${L} m · e = ${e_mm} mm<br>CHAIR H = ${ch} · ELONG ${el} mm<br>ANCHOR: LIVE ▸ DEAD`;
+    selBox.classList.remove('flash'); void selBox.offsetWidth; selBox.classList.add('flash');
+  }
+
+  /* layer toggles */
+  $$('[data-layer]').forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      const key=cb.dataset.layer; if(G[key]) G[key].visible=cb.checked;
+      if(selected && !selected.parent.visible) { selected.material.color.setHex(selected.userData.base); selected=null; }
+      say(`LAYER ${cb.dataset.layer.toUpperCase()} ${cb.checked?'ON':'OFF'}`);
+    });
+  });
+
+  /* resize */
+  function resize(){
+    const w=stage.clientWidth, h=stage.clientHeight;
+    renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(stage); resize();
+
+  /* render loop */
+  const clock=new THREE.Clock();
+  const hud=$('#vpCoords');
+  (function loop(){
+    requestAnimationFrame(loop);
+    const t=clock.getElapsedTime();
+    if(!RM && !dragging && performance.now()-lastTouch>2600) tY+=.0011;
+    rotX+=(tX-rotX)*.08; rotY+=(tY-rotY)*.08; dist+=(tDist-dist)*.08;
+    root.rotation.set(rotX,rotY,0);
+    camera.position.set(0,6.5,dist); camera.lookAt(0,2.6,0);
+    if(stressing&&!RM){
+      pulses.forEach((p,i)=>{
+        const tt=((t*.16)-i*.09)%1; const pos=p.userData.curve.getPoint((tt+1)%1);
+        p.position.copy(pos);
+        p.material.color.setHex((tt%1)<.5?0xffe08a:0xffb02e);
+      });
+    }
+    if(hud) hud.textContent=`θ ${String(Math.round(((rotY*57.29)%360+360)%360)).padStart(3,'0')}° · φ ${String(Math.round(Math.abs(rotX)*57.29)).padStart(3,'0')}° · R ${dist.toFixed(1)}`;
+    renderer.render(scene,camera);
+  })();
+
+  /* autostart stressing once in view */
+  if(!RM){
+    new IntersectionObserver((es,ob)=>{ es.forEach(e=>{ if(e.isIntersecting){ setTimeout(()=>setStress(true),1200); ob.disconnect(); } }); },{threshold:.3}).observe(stage);
+  }
+}
+})();
+</script>
+</body>
+</html>
