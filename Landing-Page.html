@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vortex PT — Post-Tension Shop Drawing Software</title>
+<meta name="description" content="Vortex PT turns RAM Concept and ADAPT-Builder models into site-ready post-tension shop drawings: layered AutoCAD DXF, Excel schedules and drape profiles — 100% offline, licensed per PC. Free 7-day trial.">
+<meta name="keywords" content="post-tension, shop drawings, RAM Concept, ADAPT-Builder, DXF export, tendon detailing, Vortex PT">
+<meta name="author" content="Vortex PT">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ahmedelkholy8.github.io/VortexPT/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 20'%3E%3Cpath d='M1 4 Q13 22 25 4' stroke='%23ffb02e' stroke-width='2.2' fill='none'/%3E%3Cpath d='M1 4 H25' stroke='%234fd8ff' stroke-width='1'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vortex PT">
+<meta property="og:title" content="Vortex PT — Post-Tension Shop Drawing Software">
+<meta property="og:description" content="From RAM Concept to site-ready drawings in minutes — live CAD canvas, layered DXF export and Excel schedules. Offline, licensed per PC.">
+<meta property="og:url" content="https://ahmedelkholy8.github.io/VortexPT/">
+<meta property="og:image" content="https://ahmedelkholy8.github.io/VortexPT/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vortex PT — Post-Tension Shop Drawing Software">
+<meta name="twitter:description" content="RAM Concept to site-ready post-tension shop drawings in minutes. DXF + Excel exports, fully offline.">
+<meta name="twitter:image" content="https://ahmedelkholy8.github.io/VortexPT/og-image.png">
+<meta name="theme-color" content="#081426">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -75,6 +92,8 @@ nav.scrolled{background:rgba(5,12,23,.95)}
 .btn-p:hover{transform:translate(-3px,-3px); box-shadow:5px 5px 0 var(--cyan)}
 .btn-g{border-color:var(--line3); color:var(--cyan); background:transparent}
 .btn-g:hover{background:rgba(79,216,255,.08); border-color:var(--cyan); transform:translate(-2px,-2px); box-shadow:4px 4px 0 rgba(79,216,255,.25)}
+.btn-dl{border-color:var(--cyan-dim); color:var(--cyan); background:transparent}
+.btn-dl:hover{border-color:var(--cyan); color:#0a1522; background:var(--cyan); transform:translate(-2px,-2px); box-shadow:4px 4px 0 rgba(255,176,46,.35)}
 
 /* ============ KICKERS / HEADS ============ */
 .kick{display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:11px; letter-spacing:.34em; color:var(--cyan); text-transform:uppercase}
@@ -135,6 +154,8 @@ h1 .amber{color:var(--amber)}
 .tcell:last-child{border-right:0}
 .tcell i{display:block; font-style:normal; font-family:var(--mono); font-size:8px; letter-spacing:.2em; color:var(--txt-dim)}
 .tcell b{font-family:var(--mono); font-size:11px; color:var(--cyan); font-weight:500}
+.vp-kb{position:absolute; left:14px; bottom:14px; right:14px; z-index:5}
+.vp-kb .mono{font-size:9.5px; letter-spacing:.16em; color:var(--txt-dim); background:rgba(5,12,23,.8); border:1px solid var(--line); padding:8px 10px; display:block}
 .scrollcue{position:absolute; left:50%; bottom:22px; transform:translateX(-50%); font-family:var(--mono); font-size:9.5px; letter-spacing:.4em; color:var(--txt-dim); display:flex; flex-direction:column; align-items:center; gap:8px}
 .scrollcue::after{content:""; width:1px; height:34px; background:linear-gradient(var(--cyan),transparent); animation:cue 1.8s ease infinite}
 @keyframes cue{0%{transform:scaleY(0); transform-origin:top}55%{transform:scaleY(1); transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0); transform-origin:bottom}}
@@ -397,7 +418,7 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
     <a href="#faq">FAQ</a>
   </div>
   <button class="lang" id="langBtn" aria-label="Arabic version">عربي</button>
-  <a class="ncta" href="#pricing">GET LICENSED</a>
+  <a class="ncta" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe">DOWNLOAD v0.9.5</a>
 </nav>
 
 <!-- ================= HERO : THE SHEET ================= -->
@@ -407,11 +428,11 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   <div class="wrap hero-grid">
     <div>
       <div class="hmeta rv" style="--d:.05s">
-        <span>SHEET <b>S-001</b></span><span>REV <b>3.2</b></span><span>MODE <b>OFFLINE</b></span><span>UNITS <b>mm / MPa</b></span>
+        <span>SHEET <b>S-001</b></span><span>REV <b>0.9.5</b></span><span>MODE <b>OFFLINE</b></span><span>UNITS <b>mm / MPa</b></span>
       </div>
       <h1>
-        <span data-scramble>POST-TENSION</span><br>
-        <span data-scramble class="amber">SHOP DRAWINGS</span>
+        <span data-scramble aria-label="POST-TENSION">POST-TENSION</span><br>
+        <span data-scramble class="amber" aria-label="SHOP DRAWINGS">SHOP DRAWINGS</span>
       </h1>
       <p class="lead rv" style="--d:.2s">
         From <strong>RAM Concept</strong> to site-ready drawings in minutes. Vortex PT extracts your
@@ -419,9 +440,10 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <strong>layered AutoCAD DXF</strong> + full <strong>Excel schedules</strong>. Offline, licensed per PC.
       </p>
       <div class="hero-cta rv" style="--d:.3s">
-        <a class="btn btn-p" href="#pricing">GET LICENSED →</a>
-        <a class="btn btn-g" href="#how">HOW IT WORKS</a>
+        <a class="btn btn-p" id="dlBtn" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD INSTALLER · v0.9.5</a>
+        <a class="btn btn-g" href="#pricing">SEE PRICING →</a>
       </div>
+      <p class="hnote rv mono" style="--d:.36s; font-size:11px; letter-spacing:.14em; color:var(--txt-dim); margin-top:14px">WINDOWS 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">RELEASE NOTES</a> · FREE 7-DAY TRIAL — FULL FEATURES</p>
       <div class="stats rv" style="--d:.4s">
         <div class="stat"><b><em>12</em></b><span>CAD LAYERS</span></div>
         <div class="stat"><b><em>4</em></b><span>EXCEL SHEETS</span></div>
@@ -524,7 +546,7 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       </aside>
 
       <div class="vp-stage" id="vpStage">
-        <canvas id="gl"></canvas>
+        <canvas id="gl" role="img" aria-label="Interactive 3D model viewport: slab, post-tension tendons, columns and chairs. Drag to orbit, scroll to zoom, click a tendon to inspect it."></canvas>
         <div class="vp-hud tl">MODEL: ROOF FLOOR · VP-2026-001</div>
         <div class="vp-hud tr">DRAG ORBIT · WHEEL ZOOM<br>CLICK = INSPECT</div>
         <div class="vp-hud bl" id="vpCoords">θ 028° · φ 064° · R 30.0</div>
@@ -574,7 +596,7 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
           <text id="pch" x="120" y="196" fill="#ff5dc8">CHAIR H = 55 mm</text>
         </svg>
         <div class="pctl"><span>MIDSPAN DRAPE</span><input type="range" id="prange" min="40" max="140" value="90" step="1" aria-label="Adjust drape depth"><span id="prangeVal" style="color:var(--amber)">90 mm</span></div>
-        <div class="pread"><span>ELONG ≈ <b id="pelong">212 mm</b></span><span>ANCHOR: <b>LIVE / DEAD</b></span><span>f<sub>pu</sub> = <b>1860 MPa</b></span></div>
+        <div class="pread"><span>ELONG ≈ <b id="pelong">216 mm</b></span><span>ANCHOR: <b>LIVE / DEAD</b></span><span>f<sub>pu</sub> = <b>1860 MPa</b></span></div>
       </article>
 
       <!-- extraction -->
@@ -646,7 +668,7 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       <div class="step rv">
         <div class="stepnum">01</div>
         <h3>Order &amp; confirm</h3>
-        <p>Pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.</p>
+        <p>Grab the installer above or pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.</p>
       </div>
       <div class="step rv" style="--d:.12s">
         <div class="stepnum">02</div>
@@ -685,7 +707,8 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <div class="price">$25<sub> USD</sub></div>
         <div class="per">PER 30 DAYS</div>
         <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
-        <a class="btn btn-g wa-buy" data-plan="Monthly $25" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Monthly%20plan">BUY MONTHLY</a>
+        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Monthly%20plan">BUY MONTHLY</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
 
       <article class="plan plan-hot tilt rv" style="--d:.12s">
@@ -694,7 +717,8 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <div class="price">$250<sub> USD</sub></div>
         <div class="per">PER 12 MONTHS · SAVE $50</div>
         <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>Priority WhatsApp support</li></ul>
-        <a class="btn btn-p wa-buy" data-plan="Yearly $250" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Yearly%20plan">BUY YEARLY</a>
+        <a class="btn btn-p wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Yearly%20plan">BUY YEARLY</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
 
       <article class="plan plan-life tilt rv" style="--d:.24s">
@@ -702,7 +726,8 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <div class="price">$1000<sub> USD</sub></div>
         <div class="per">PAY ONCE · YOURS FOREVER</div>
         <ul><li>Full features</li><li>1 PC, forever</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
-        <a class="btn btn-g wa-buy" data-plan="Lifetime $1000" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT%20—%20Lifetime%20license">BUY LIFETIME</a>
+        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Lifetime%20license">BUY LIFETIME</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
     </div>
 
@@ -722,24 +747,24 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
 
     <div class="faq-list rv" style="--d:.1s">
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false"><span class="qi">Q.01</span>Does it need internet?<span class="pm"></span></button>
-        <div class="faq-a"><div><p>Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a1" id="faq-a1-btn"><span class="qi">Q.01</span>Does it need internet?<span class="pm"></span></button>
+        <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-a1-btn" hidden><div><p>Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false"><span class="qi">Q.02</span>Which files does it open?<span class="pm"></span></button>
-        <div class="faq-a"><div><p>RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a2" id="faq-a2-btn"><span class="qi">Q.02</span>Which files does it open?<span class="pm"></span></button>
+        <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-a2-btn" hidden><div><p>RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false"><span class="qi">Q.03</span>What exactly do I export?<span class="pm"></span></button>
-        <div class="faq-a"><div><p>Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a3" id="faq-a3-btn"><span class="qi">Q.03</span>What exactly do I export?<span class="pm"></span></button>
+        <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-a3-btn" hidden><div><p>Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false"><span class="qi">Q.04</span>How do updates work?<span class="pm"></span></button>
-        <div class="faq-a"><div><p>Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a4" id="faq-a4-btn"><span class="qi">Q.04</span>How do updates work?<span class="pm"></span></button>
+        <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-a4-btn" hidden><div><p>Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed. Release notes and installers live on <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest">GitHub Releases</a>.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false"><span class="qi">Q.05</span>Refund policy?<span class="pm"></span></button>
-        <div class="faq-a"><div><p>Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT">WhatsApp</a>.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a5" id="faq-a5-btn"><span class="qi">Q.05</span>Refund policy?<span class="pm"></span></button>
+        <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-a5-btn" hidden><div><p>Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/201552228306?text=Vortex%20PT">WhatsApp</a>.</p></div></div>
       </div>
     </div>
   </div>
@@ -753,18 +778,21 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       <div>
         <h4>Ready to <span>detail?</span></h4>
         <p class="sub" style="margin:16px 0 28px">Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.</p>
-        <a class="btn btn-p" href="https://wa.me/__WHATSAPP_NUMBER__?text=Vortex%20PT">◈ CHAT ON WHATSAPP</a>
+        <div style="display:flex; gap:14px; flex-wrap:wrap">
+          <a class="btn btn-p" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD INSTALLER</a>
+          <a class="btn btn-g" href="https://wa.me/201552228306?text=Vortex%20PT">◈ CHAT ON WHATSAPP</a>
+        </div>
       </div>
       <div class="fmeta">
         <b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br>
         <b>INPUT</b> — .CPT · .INP<br>
         <b>OUTPUT</b> — .DXF · .XLSX · .CSV<br>
         <b>NETWORK</b> — NOT REQUIRED<br>
-        <b>SHEET</b> — S-001 / REV 3.2 / 2026
+        <b>SHEET</b> — S-001 / REV 0.9.5 / 2026
       </div>
     </div>
     <div class="copy">
-      <span>© 2026 VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.</span>
+      <span>© <span id="yr">2026</span> VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.</span>
       <span>⌖ DRAWN OFFLINE · CHECKED ON SITE</span>
     </div>
   </div>
@@ -776,13 +804,13 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   <div>LAYER: <b>PT-TENDONS</b></div>
   <div>SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
   <div class="grow"></div>
-  <div>LIC: <b>TRIAL · 7 DAYS</b></div>
-  <div>VORTEX PT v3.2</div>
+  <div>LIC: <b>FREE TRIAL · 7 DAYS</b></div>
+  <div>VORTEX PT v0.9.5</div>
 </div>
 
 <div id="toast" role="status"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="window.__THREE_FAILED=1"></script>
 <script>
 (function(){
 "use strict";
@@ -792,6 +820,8 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 
 /* ---------- date / title block ---------- */
 const tb = $('#tbDate');
+const yr = $('#yr');
+if(yr) yr.textContent = String(new Date().getFullYear());
 if(tb){ const d=new Date(); tb.textContent = d.toISOString().slice(0,10); }
 
 /* ---------- nav ---------- */
@@ -801,12 +831,14 @@ addEventListener('scroll', ()=> nav.classList.toggle('scrolled', scrollY>30), {p
 /* ---------- toast ---------- */
 const toast = $('#toast'); let toastT;
 function say(msg){ toast.textContent=msg; toast.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('show'),2800); }
+$$('a[download]').forEach(a=>a.addEventListener('click', ()=> say('Downloading Vortex PT installer — send us your Machine ID when prompted.')));
 $('#langBtn').addEventListener('click', ()=> say('النسخة العربية قيد التطوير — Arabic UI ships in the next build.'));
 
 /* ---------- scramble decode ---------- */
 const GLYPHS = '▓▒░<>/\\|=+×#01';
 function scramble(el){
   const final = el.dataset.text || el.textContent;
+  el.setAttribute('aria-label', final);
   el.dataset.text = final;
   if(RM){ el.textContent = final; return; }
   let frame=0; const total = final.length*3+14;
@@ -874,7 +906,7 @@ if(pr){
     $('#pe').setAttribute('y', Math.max(100,(78+y2)/2));
     $('#pch').textContent = `CHAIR H = ${Math.max(25,v-35)} mm`;
     $('#prangeVal').textContent = v+' mm';
-    $('#pelong').textContent = Math.round(v*2.35)+' mm';
+    $('#pelong').textContent = Math.round(v*2.4)+' mm';
   });
 }
 
@@ -907,9 +939,17 @@ if(!RM && matchMedia('(pointer:fine)').matches){
 /* ---------- FAQ accordion ---------- */
 $$('.faq-q').forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    const item=btn.parentElement, open=item.classList.contains('open');
-    $$('.faq-i.open').forEach(i=>{ i.classList.remove('open'); $('.faq-q',i).setAttribute('aria-expanded','false'); });
-    if(!open){ item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    const item=btn.parentElement, panel=$('.faq-a',item), open=item.classList.contains('open');
+    $$('.faq-i.open').forEach(i=>{
+      i.classList.remove('open');
+      $('.faq-q',i).setAttribute('aria-expanded','false');
+      $('.faq-a',i).hidden = true;
+    });
+    if(!open){
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded','true');
+      panel.hidden = false;
+    }
   });
 });
 
@@ -926,7 +966,27 @@ if(sbx){
 }
 
 /* ================= THREE.JS VIEWPORT ================= */
-if(typeof THREE !== 'undefined' && $('#gl')){
+const glCanvas=$('#gl');
+let glOK=false;
+try{ const t=document.createElement('canvas'); glOK=!!(window.WebGLRenderingContext && (t.getContext('webgl')||t.getContext('experimental-webgl'))); }catch(e){ glOK=false; }
+if(typeof THREE === 'undefined' || !glOK){
+  if(glCanvas){
+    const vstage=$('#vpStage');
+    if(vstage){
+      const fb=document.createElement('div');
+      fb.style.cssText='position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:20px';
+      fb.innerHTML='<span class="mono" style="font-size:11px; letter-spacing:.26em; color:var(--amber)">WEBGL UNAVAILABLE</span>'+
+        '<span class="mono" style="font-size:10.5px; letter-spacing:.14em; color:var(--txt-dim); max-width:34ch">Interactive 3D preview needs hardware acceleration. Vortex PT itself runs fully offline on any Windows 10/11 PC.</span>';
+      vstage.appendChild(fb);
+    }
+    glCanvas.remove();
+  }
+  /* keyboard-accessible fallback controls for the static preview */
+  const kb=document.createElement('div');
+  kb.className='vp-kb';
+  kb.innerHTML='<span class="mono">STATIC PREVIEW · KEYBOARD CONTROLS UNAVAILABLE WITHOUT WEBGL — ALL FEATURES WORK IN THE DESKTOP APP.</span>';
+  const vstage2=$('#vpStage'); if(vstage2) vstage2.appendChild(kb);
+} else if(glCanvas){
   const canvas=$('#gl'), stage=$('#vpStage');
   const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
@@ -1086,11 +1146,14 @@ if(typeof THREE !== 'undefined' && $('#gl')){
   }
   new ResizeObserver(resize).observe(stage); resize();
 
-  /* render loop */
+  /* render loop — paused when off-screen or tab hidden */
   const clock=new THREE.Clock();
   const hud=$('#vpCoords');
+  let inView=true;
+  new IntersectionObserver(es=>{ es.forEach(e=>{ inView=e.isIntersecting; }); },{threshold:.05}).observe(stage);
   (function loop(){
     requestAnimationFrame(loop);
+    if(inView === false || document.hidden) return; // skip rendering off-screen / hidden tab
     const t=clock.getElapsedTime();
     if(!RM && !dragging && performance.now()-lastTouch>2600) tY+=.0011;
     rotX+=(tX-rotX)*.08; rotY+=(tY-rotY)*.08; dist+=(tDist-dist)*.08;
