@@ -973,7 +973,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
           <a class="btn btn-g" href="https://wa.me/201552228306?text=Vortex%20PT" data-i18n="ft_wa">◈ CHAT ON WHATSAPP</a>
         </div>
       </div>
-      <div class="fmeta" data-i18n-html data-i18n="ft_meta">
+      <div class="fmeta" id="ftMeta" data-i18n-html data-i18n="ft_meta">
         <b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br>
         <b>INPUT</b> — .CPT · .INP<br>
         <b>OUTPUT</b> — .DXF · .XLSX · .CSV<br>
@@ -1028,10 +1028,12 @@ function applyVersion(){
   const v = VERSION.num, tag = VERSION.tag;
   $$('[data-version-text]').forEach(el=>{
     const k = el.dataset.i18n;
-    if(k==='nav_download') el.textContent = LANG==='ar' ? `حمّل النسخة ${v}` : `DOWNLOAD ${tag}`;
-    else if(k==='hero_rev') el.innerHTML = LANG==='ar' ? `<b>${v}</b> المراجعة` : `REV <b>${v}</b>`;
-    else if(k==='hero_dl') el.textContent = (LANG==='ar' ? '⭳ حمّل برنامج التثبيت · ' : '⭳ DOWNLOAD INSTALLER · ') + (LANG==='ar' ? v : tag);
-    else el.textContent = `VORTEX PT ${tag}`;
+    // for keys whose dict value carries a @@VER@@ token, substitute in place so nested markup survives
+    if(k && I18N[LANG] && I18N[LANG][k] && I18N[LANG][k].includes('@@VER@@')){
+      el.innerHTML = I18N[LANG][k].replace(/@@VER@@/g, (k==='nav_download'||k==='hero_dl') && LANG==='en' ? tag : v);
+    } else {
+      el.textContent = `VORTEX PT ${tag}`;   // plain fallback (e.g. footer wordmark, no i18n key)
+    }
   });
   $$('[data-version-text-inline]').forEach(el=>{ el.textContent = v; });
   // keep pinned release URLs consistent with the current version number
@@ -1063,11 +1065,11 @@ async function hydrateVersion(){
 const I18N = {
   en:{
     langBtn:'EN', title:'Vortex PT — Post-Tension Detailing, Offline | RAM Concept .CPT → DXF + Excel',
-    nav_viewport:'VIEWPORT', nav_features:'FEATURES', nav_how:'HOW IT WORKS', nav_pricing:'PRICING', nav_faq:'FAQ', nav_download:'DOWNLOAD v0.9.5',
-    hero_sheet:'SHEET <b>S-001</b>', hero_rev:'REV <b>0.9.5</b>', hero_mode:'MODE <b>OFFLINE</b>', hero_units:'UNITS <b>mm / MPa</b>',
+    nav_viewport:'VIEWPORT', nav_features:'FEATURES', nav_how:'HOW IT WORKS', nav_pricing:'PRICING', nav_faq:'FAQ', nav_download:'DOWNLOAD @@VER@@',
+    hero_sheet:'SHEET <b>S-001</b>', hero_rev:'REV <b>@@VER@@</b>', hero_mode:'MODE <b>OFFLINE</b>', hero_units:'UNITS <b>mm / MPa</b>',
     hero_t1:'POST-TENSION', hero_t2:'SHOP DRAWINGS',
     hero_lead:'From <strong>RAM Concept</strong> to site-ready drawings in minutes. Vortex PT extracts your structural model, renders a <strong>live 2D CAD canvas</strong> with tendon drape profiles, and exports <strong>layered AutoCAD DXF</strong> + full <strong>Excel schedules</strong>. Offline, licensed per PC.',
-    hero_dl:'⭳ DOWNLOAD INSTALLER · v0.9.5', hero_pricing:'SEE PRICING →',
+    hero_dl:'⭳ DOWNLOAD INSTALLER · @@VER@@', hero_pricing:'SEE PRICING →',
     hero_note:'WINDOWS 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">RELEASE NOTES</a> · FREE 7-DAY TRIAL — FULL FEATURES',
     hero_stat1:'CAD LAYERS', hero_stat2:'EXCEL SHEETS', hero_stat3:'OFFLINE AFTER ACTIVATION',
     detail_a:'DETAIL A — TENDON ELEVATION', detail_scale:'SCALE 1:50',
@@ -1107,7 +1109,15 @@ const I18N = {
     pr_li1:'Full features', pr_li2:'1 PC license', pr_li3:'Free updates in-period', pr_li4:'WhatsApp support',
     pr_try:'⭳ DOWNLOAD · TRY 7 DAYS FREE',
     pr_note1:'REPLACING YOUR PC? MESSAGE US TO TRANSFER YOUR LICENSE', pr_note2:'COMPANY MULTI-SEAT DEALS ON WHATSAPP', pr_note3:'PAID KEYS NON-REFUNDABLE AFTER DELIVERY — TRY THE 7-DAY TRIAL FIRST',
-    faq_kick:'05 — FAQ', faq_h:'Questions, answered.',
+    pr_pay_label:'PAYMENT METHODS:', pr_pay_wa:'WhatsApp order', pr_pay_bank:'Bank transfer (EGP / USD)', pr_pay_insta:'Instapay / Fawry (EG)', pr_pay_card:'PayPal invoice on request', pr_pay_note:'Prices in USD · key delivered same day',
+    cl_kick:'05 — RELEASES', cl_h1:'What\'s new in', cl_h2:'Vortex PT.',
+    cl_sub:'Every version installs over the previous one and keeps your license. Full release notes and installers live on GitHub Releases.',
+    cl_latest:'LATEST', cl_more:'ALL RELEASES ON GITHUB →',
+    cl_b1:'<ul><li>Native self-measuring CAD dimensions straight on the canvas</li><li>User-defined strand unit weight setting</li><li>Unified pan box block</li><li>License synchronization + cloud updates</li></ul>',
+    cl_b2:'<ul><li>Interactive 2D CAD canvas — pan, zoom, layer control, click-to-inspect</li><li>Multi-sheet Excel workbook: takeoff, PT schedule, chairs, rebar BBS</li></ul>',
+    cl_b3:'<ul><li>Layered AutoCAD DXF shop drawings with title block + tendon schedule table</li><li>Parabolic drape profiler with live elongation compute</li></ul>',
+    nav_changelog:'RELEASES',
+    faq_kick:'06 — FAQ', faq_h:'Questions, answered.',
     faq_q1:'Does it need internet?', faq_a1:'Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.',
     faq_q2:'Which files does it open?', faq_a2:'RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.',
     faq_q3:'What exactly do I export?', faq_a3:'Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.',
@@ -1115,7 +1125,7 @@ const I18N = {
     faq_q5:'Refund policy?', faq_a5:'Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/201552228306?text=Vortex%20PT">WhatsApp</a>.',
     ft_h:'Ready to <span>detail?</span>', ft_p:'Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.',
     ft_dl:'⭳ DOWNLOAD INSTALLER', ft_wa:'◈ CHAT ON WHATSAPP',
-    ft_meta:'<b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br><b>INPUT</b> — .CPT · .INP<br><b>OUTPUT</b> — .DXF · .XLSX · .CSV<br><b>NETWORK</b> — NOT REQUIRED<br><b>SHEET</b> — S-001 / REV 0.9.5 / 2026',
+    ft_meta:'<b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br><b>INPUT</b> — .CPT · .INP<br><b>OUTPUT</b> — .DXF · .XLSX · .CSV<br><b>NETWORK</b> — NOT REQUIRED<br><b>SHEET</b> — S-001 / REV @@REV@@ / 2026',
     ft_copy:'© <span class="js-year">2026</span> VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.', ft_copy2:'⌖ DRAWN OFFLINE · CHECKED ON SITE',
     sb_xy:'X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b>', sb_layer:'LAYER: <b>PT-TENDONS</b>', sb_snap:'SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span>', sb_lic:'LIC: <b>FREE TRIAL · 7 DAYS</b>',
     toast_download:'Downloading Vortex PT installer — send us your Machine ID when prompted.',
@@ -1123,16 +1133,15 @@ const I18N = {
     toast_stress:'Stressing sequence running — jacks traversing bands.', toast_stopped:'Sequence stopped.',
     toast_webgl:'WEBGL UNAVAILABLE', toast_webgl_p:'Interactive 3D preview needs hardware acceleration. Vortex PT itself runs fully offline on any Windows 10/11 PC.',
     toast_static:'STATIC PREVIEW · KEYBOARD CONTROLS UNAVAILABLE WITHOUT WEBGL — ALL FEATURES WORK IN THE DESKTOP APP.',
-    sel_none:'NO SELECTION —<br>click any tendon in the viewport',
     sel_info:'<b>%ID%</b> · 4 × Ø12.7 mm<br>L = %L% m · e = %E% mm<br>CHAIR H = %C% · ELONG %EL% mm<br>ANCHOR: LIVE ▸ DEAD'
   },
   ar:{
     langBtn:'EN', title:'فورتكس بي تي — رسم تفاصيل ما بعد الشد أوفلاين | RAM Concept ‏.CPT ← DXF + إكسل',
-    nav_viewport:'العرض ثلاثي الأبعاد', nav_features:'القدرات', nav_how:'كيف تبدأ', nav_pricing:'الأسعار', nav_faq:'الأسئلة الشائعة', nav_download:'حمّل النسخة 0.9.5',
-    hero_sheet:'<b>S-001</b> اللوحة', hero_rev:'<b>0.9.5</b> المراجعة', hero_mode:'<b>أوفلاين</b> الوضع', hero_units:'<b>مم / ميجا باسكال</b> الوحدات',
+    nav_viewport:'العرض ثلاثي الأبعاد', nav_features:'القدرات', nav_how:'كيف تبدأ', nav_pricing:'الأسعار', nav_faq:'الأسئلة الشائعة', nav_download:'حمّل النسخة @@VER@@',
+    hero_sheet:'<b>S-001</b> اللوحة', hero_rev:'<b>@@VER@@</b> المراجعة', hero_mode:'<b>أوفلاين</b> الوضع', hero_units:'<b>مم / ميجا باسكال</b> الوحدات',
     hero_t1:'خرائط ما بعد الشد', hero_t2:'جاهزة للتنفيذ',
     hero_lead:'من <strong>RAM Concept</strong> إلى خرائط جاهزة للموقع في دقائق. يستخرج فورتكس بي تي نموذجك الإنشائي، ويعرض <strong>لوحة CAD حيّة ثنائية الأبعاد</strong> مع مناسيب انحناء الكابلات، ويصدّر <strong>ملفات DXF متعددة الطبقات</strong> + <strong>جداول إكسل</strong> كاملة. أوفلاين، بترخيص لكل جهاز.',
-    hero_dl:'⭳ حمّل برنامج التثبيت · 0.9.5', hero_pricing:'← شاهد الأسعار',
+    hero_dl:'⭳ حمّل برنامج التثبيت · @@VER@@', hero_pricing:'← شاهد الأسعار',
     hero_note:'ويندوز 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">ملاحظات الإصدار</a> · تجربة مجانية 7 أيام — بكامل المزايا',
     hero_stat1:'طبقات CAD', hero_stat2:'أوراق إكسل', hero_stat3:'أوفلاين بعد التفعيل',
     detail_a:'التفصيل A — مقطع الكابل الجانبي', detail_scale:'المقياس 1:50',
@@ -1172,7 +1181,15 @@ const I18N = {
     pr_li1:'كامل المزايا', pr_li2:'ترخيص جهاز واحد', pr_li3:'تحديثات مجانية خلال الفترة', pr_li4:'دعم واتساب',
     pr_try:'⭳ تحميل · جرّب 7 أيام مجانًا',
     pr_note1:'تغيّر جهازك؟ راسلنا لنقل الترخيص', pr_note2:'صفقات الشركات متعددة الأجهزة عبر واتساب', pr_note3:'المفاتيح المدفوعة غير قابلة للاسترداد بعد التسليم — جرّب الـ 7 أيام المجانية أولًا',
-    faq_kick:'05 — الأسئلة الشائعة', faq_h:'أسئلة.. وإجاباتها.',
+    pr_pay_label:'طرق الدفع:', pr_pay_wa:'طلب عبر واتساب', pr_pay_bank:'تحويل بنكي (جنيه / دولار)', pr_pay_insta:'إنستا باي / فوري', pr_pay_card:'فاتورة PayPal عند الطلب', pr_pay_note:'الأسعار بالدولار · التسليم في نفس اليوم',
+    cl_kick:'05 — الإصدارات', cl_h1:'الجديد في', cl_h2:'فورتكس بي تي.',
+    cl_sub:'كل نسخة تُثبَّت فوق السابقة وتحافظ على ترخيصك. ملاحظات الإصدارات الكاملة وبرامج التثبيت على GitHub Releases.',
+    cl_latest:'الأحدث', cl_more:'← كل الإصدارات على GitHub',
+    cl_b1:'<ul><li>أبعاد CAD ذاتية القياس مباشرة على اللوحة</li><li>إعداد وزن الشدّة لكل متر حدّه المستخدم</li><li>توحيد كتلة صندوق التحريك</li><li>مزامنة الترخيص + تحديثات سحابية</li></ul>',
+    cl_b2:'<ul><li>لوحة CAD تفاعلية — تحريك، تقريب، تحكم بالطبقات، والنقر للفحص</li><li>مصنف إكسل متعدد الأوراق: حصر، جدول كابلات، كراسي، BBS تسليح</li></ul>',
+    cl_b3:'<ul><li>خرائط DXF متعددة الطبقات مع خانة عنوان وجدول كابلات</li><li>راسم انحناء قطع مكافئ مع حساب الاستطالة اللحظي</li></ul>',
+    nav_changelog:'الإصدارات',
+    faq_kick:'06 — الأسئلة الشائعة', faq_h:'أسئلة.. وإجاباتها.',
     faq_q1:'هل يحتاج إنترنت؟', faq_a1:'فقط لتحميل برنامج التثبيت. التفعيل والعمل اليومي <strong>أوفلاين 100%</strong> — الترخيص مرتبط بالجهاز ويُتحقق محليًا.',
     faq_q2:'أي ملفات يفتح؟', faq_a2:'ملفات RAM Concept ‏(<span class="mono">.cpt</span>) مباشرة، بالإضافة إلى ADAPT-Builder عبر تصدير <span class="mono">.inp</span> — البلاطات والأعمدة والجدران والكمائم والكابلات والحديد كلها تنتقل.',
     faq_q3:'ماذا أُصدّر بالضبط؟', faq_a3:'ملفات AutoCAD DXF متعددة الطبقات مع خانة عنوان وجدول كابلات، ومصنف إكسل متعدد الأوراق (حصر، جدول كابلات، كراسي، BBS تسليح) بالإضافة إلى ملفات CSV للأدوات التالية.',
@@ -1180,7 +1197,7 @@ const I18N = {
     faq_q5:'سياسة الاسترداد؟', faq_a5:'ابدأ بالتجربة المجانية 7 أيام — بكامل المزايا، لتشتري بثقة. المفاتيح المدفوعة غير قابلة للاسترداد بعد التسليم. أسئلتك في أي وقت على <a href="https://wa.me/201552228306?text=Vortex%20PT">واتساب</a>.',
     ft_h:'جاهز <span>للتفصيل؟</span>', ft_p:'أرسل لنا معرّف جهازك اليوم — قد تُصدّر خرائط تنفيذ قبل أن يبرد قهوتك.',
     ft_dl:'⭳ حمّل برنامج التثبيت', ft_wa:'◈ راسلنا على واتساب',
-    ft_meta:'<b>الملف</b> — VORTEX-PT / سطح مكتب / ويندوز<br><b>المدخلات</b> — .CPT · .INP<br><b>المخرجات</b> — .DXF · .XLSX · .CSV<br><b>الشبكة</b> — غير مطلوبة<br><b>اللوحة</b> — S-001 / المراجعة 0.9.5 / 2026',
+    ft_meta:'<b>الملف</b> — VORTEX-PT / سطح مكتب / ويندوز<br><b>المدخلات</b> — .CPT · .INP<br><b>المخرجات</b> — .DXF · .XLSX · .CSV<br><b>الشبكة</b> — غير مطلوبة<br><b>اللوحة</b> — S-001 / المراجعة @@REV@@ / 2026',
     ft_copy:'© <span class="js-year">2026</span> فورتكس بي تي — تفصيل ما بعد الشد، بإتقان.', ft_copy2:'⌖ رُسم أوفلاين · روجع في الموقع',
     sb_xy:'س: <b id="sbx">0000.00</b>&nbsp;&nbsp;ص: <b id="sby">0000.00</b>', sb_layer:'الطبقة: <b>PT-TENDONS</b>', sb_snap:'SNAP <span class="on">مفتوح</span> · GRID <span class="on">مفتوح</span> · ORTHO <span class="on">مفتوح</span>', sb_lic:'الترخيص: <b>تجربة مجانية · 7 أيام</b>',
     toast_download:'جارٍ تحميل برنامج تثبيت فورتكس بي تي — أرسل لنا معرّف جهازك عند الطلب.',
@@ -1188,7 +1205,6 @@ const I18N = {
     toast_stress:'تسلسل الشد قيد التشغيل — الجاكات تتحرك عبر الأطواق.', toast_stopped:'تم إيقاف التسلسل.',
     toast_webgl:'WEBGL غير متاح', toast_webgl_p:'المعاينة ثلاثية الأبعاد التفاعلية تحتاج تسريعًا للعتاد. يعمل فورتكس بي تي نفسه بالكامل أوفلاين على أي جهاز ويندوز 10/11.',
     toast_static:'معاينة ثابتة · أدوات لوحة المفاتيح غير متاحة بدون WEBGL — كل المزايا تعمل في تطبيق سطح المكتب.',
-    sel_none:'لا يوجد تحديد —<br>انقر على أي كابل في الشاشة',
     sel_info:'<b>%ID%</b> · 4 × Ø12.7 مم<br>الطول = %L% م · الانحناء = %E% مم<br>ارتفاع الكرسي = %C% · الاستطالة %EL% مم<br>المرسى: حيّ ◂ ميّت'
   }
 };
@@ -1201,9 +1217,13 @@ function applyLang(lang){
   document.documentElement.lang = LANG;
   document.documentElement.dir = (LANG==='ar') ? 'rtl' : 'ltr';
   document.title = dict.title;
+  const ver = VERSION.num, tag = VERSION.tag;
   $$('[data-i18n]').forEach(el=>{
-    const k = el.dataset.i18n, v = dict[k];
+    const k = el.dataset.i18n; let v = dict[k];
     if(v===undefined) return;
+    // hydrate version tokens from the single source (version.json) before injecting
+    if(v.includes('@@VER@@')) v = v.replace(/@@VER@@/g, (k==='nav_download'||k==='hero_dl') && LANG==='en' ? tag : ver);
+    if(v.includes('@@REV@@')) v = v.replace(/@@REV@@/g, ver);
     if('i18nHtml' in el.dataset) el.innerHTML = v;
     else if('i18nAria' in el.dataset) el.setAttribute('aria-label', v.replace(/<[^>]+>/g,''));
     else if('i18nAlt' in el.dataset) el.setAttribute('alt', v);
