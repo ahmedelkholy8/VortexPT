@@ -115,7 +115,7 @@ body::after{
 
 /* ============ NAV ============ */
 nav{
-  position:fixed; top:0; left:0; right:0; z-index:100; height:60px;
+  position:fixed; top:0; inset-inline:0; z-index:100; height:60px;   /* logical anchors: in RTL, left/right resolve against the start/end edge — physical left:auto would collapse the bar */
   display:flex; align-items:center; gap:28px; padding:0 clamp(16px,3vw,40px);
   border-bottom:1px solid var(--line); background:rgba(7,16,30,.82); backdrop-filter:blur(10px);
   transition:background .3s;
@@ -483,6 +483,8 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 /* ============ RTL / ARABIC ============ */
 [dir="rtl"] nav{flex-direction:row-reverse}
 [dir="rtl"] .nlinks{margin-inline-start:0; margin-inline-end:auto}
+/* keep Latin/numeric technical tokens (LAYER: PT-TENDONS, X:, v0.9.5) reading LTR inside RTL lines */
+.ltr{unicode-bidi:isolate}
 [dir="rtl"] .nlinks a::after{left:auto; right:0}
 [dir="rtl"] .kick::before{order:1}
 [dir="rtl"] .kick{flex-direction:row}
@@ -550,8 +552,8 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 
 <!-- ================= HERO : THE SHEET ================= -->
 <header class="hero" id="top">
-  <span class="axis" style="top:86px; left:24px">A ⌁ B ⌁ C ⌁ D ⌁ E</span>
-  <span class="axis" style="bottom:60px; right:24px">GRID 1:100 · NTS</span>
+  <span class="axis" style="top:86px; inset-inline-start:24px">A ⌁ B ⌁ C ⌁ D ⌁ E</span>
+  <span class="axis" style="bottom:60px; inset-inline-end:24px">GRID 1:100 · NTS</span>
   <div class="wrap hero-grid">
     <div>
       <div class="hmeta rv" style="--d:.05s">
@@ -990,12 +992,12 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 
 <!-- CAD status bar -->
 <div class="sbar" aria-hidden="true">
-  <div data-i18n-html data-i18n="sb_xy">X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b></div>
-  <div data-i18n-html data-i18n="sb_layer">LAYER: <b>PT-TENDONS</b></div>
-  <div data-i18n-html data-i18n="sb_snap">SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
+  <div class="ltr" data-i18n-html data-i18n="sb_xy">X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b></div>
+  <div class="ltr" data-i18n-html data-i18n="sb_layer">LAYER: <b>PT-TENDONS</b></div>
+  <div class="ltr" data-i18n-html data-i18n="sb_snap">SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
   <div class="grow"></div>
-  <div data-i18n-html data-i18n="sb_lic">LIC: <b>FREE TRIAL · 7 DAYS</b></div>
-  <div>VORTEX PT <span data-version-text>v0.9.5</span></div>
+  <div class="ltr" data-i18n-html data-i18n="sb_lic">LIC: <b>FREE TRIAL · 7 DAYS</b></div>
+  <div class="ltr">VORTEX PT <span data-version-text>v0.9.5</span></div>
 </div>
 
 <div id="toast" role="status"></div>
@@ -1389,8 +1391,8 @@ $$('.faq-q').forEach(btn=>{
 });
 
 /* ---------- status bar coords ---------- */
-const sbx=$('#sbx'), sby=$('#sby'); let raf=null, sbVisible=true;
-if(sbx){
+const sbxEl=$('#sbx'), sbyEl=$('#sby'); let raf=null, sbVisible=true;
+if(sbxEl){
   // the status bar is display:none under 860px — skip all coordinate work when hidden
   const sbMedia = matchMedia('(min-width:861px)');
   sbVisible = sbMedia.matches;
@@ -1398,8 +1400,8 @@ if(sbx){
   addEventListener('mousemove', e=>{
     if(!sbVisible || raf) return;
     raf=requestAnimationFrame(()=>{ raf=null;
-      sbx.textContent=(e.clientX*3.14).toFixed(2).padStart(7,'0');
-      sby.textContent=(e.clientY*2.72).toFixed(2).padStart(7,'0');
+      sbxEl.textContent=(e.clientX*3.14).toFixed(2).padStart(7,'0');
+      sbyEl.textContent=(e.clientY*2.72).toFixed(2).padStart(7,'0');
     });
   },{passive:true});
 }
