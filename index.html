@@ -23,7 +23,7 @@
 <meta name="theme-color" content="#081426">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Cairo:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -35,6 +35,11 @@
   --txt:#c9dcEe; --txt-dim:#7d99b5;
   --disp:'Chakra Petch',sans-serif; --body:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
 }
+/* Arabic typography */
+html[lang="ar"] body{font-family:'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif}
+html[lang="ar"] .brand,html[lang="ar"] h1,html[lang="ar"] .h2,html[lang="ar"] .kick,
+html[lang="ar"] .cell h3,html[lang="ar"] .step h3,html[lang="ar"] .faq-q,html[lang="ar"] .fgrid h4,
+html[lang="ar"] .stat b,html[lang="ar"] .vstat b,html[lang="ar"] .plan .price{font-family:'Cairo','Chakra Petch',sans-serif; letter-spacing:0!important}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-padding-top:84px}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
@@ -400,6 +405,52 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   .fig img{animation:none}
   .in .xrow .bar{transition:none}
 }
+
+/* ============ RTL / ARABIC ============ */
+[dir="rtl"] nav{flex-direction:row-reverse}
+[dir="rtl"] .nlinks{margin-left:0; margin-right:auto}
+[dir="rtl"] .nlinks a::after{left:auto; right:0}
+[dir="rtl"] .kick::before{order:1}
+[dir="rtl"] .kick{flex-direction:row}
+[dir="rtl"] .stat{border-right:0; border-left:1px solid var(--line2)}
+[dir="rtl"] .stat:last-child{border-left:0}
+[dir="rtl"] .faq-q{text-align:right}
+[dir="rtl"] .faq-q .pm{margin-left:0; margin-right:auto}
+[dir="rtl"] .faq-a p{padding:0 72px 26px 6px}
+[dir="rtl"] .plan li::before{order:2}
+[dir="rtl"] .pnote span::before{content:"◆ "; margin-left:8px}
+[dir="rtl"] .step{padding:0 0 0 34px}
+[dir="rtl"] .step:not(:last-child)::after{left:-8px; right:auto}
+[dir="rtl"] .stamp{right:auto; left:-10px}
+[dir="rtl"] .hot-stamp{right:auto; left:22px}
+[dir="rtl"] .vp-hud.tl{left:auto; right:16px}
+[dir="rtl"] .vp-hud.tr{right:auto; left:16px; text-align:left}
+[dir="rtl"] .vp-hud.bl{left:auto; right:16px}
+[dir="rtl"] .vp-hud.br{right:auto; left:16px}
+[dir="rtl"] .vp-tools{right:auto; left:14px}
+[dir="rtl"] .runbtn{left:auto; right:16px}
+[dir="rtl"] .lp-title{flex-direction:row-reverse}
+[dir="rtl"] .leye{margin-left:0; margin-right:auto}
+[dir="rtl"] .selbox{text-align:right}
+[dir="rtl"] .vstat b i{margin-left:0; margin-right:4px}
+[dir="rtl"] .cidx{right:auto; left:20px}
+[dir="rtl"] .cell::before{top:6px; left:auto; right:6px; border-left-width:0; border-right-width:2px}
+[dir="rtl"] .cell::after{bottom:6px; right:auto; left:6px; border-right-width:0; border-left-width:2px}
+[dir="rtl"] .dpanel::before{left:auto; right:-1px; border-width:2px 2px 0 0}
+[dir="rtl"] .dpanel::after{right:auto; left:-1px; border-width:2px 0 0 2px}
+[dir="rtl"] .corner::before{left:auto; right:-1px; border-width:0 2px 2px 0}
+[dir="rtl"] .corner::after{right:auto; left:-1px; border-width:2px 0 0 2px}
+[dir="rtl"] .tcell{border-right:0; border-left:1px solid var(--line2)}
+[dir="rtl"] .tcell:last-child{border-left:0}
+[dir="rtl"] .sbar div{border-right:0; border-left:1px solid var(--line)}
+[dir="rtl"] #toast{direction:rtl}
+[dir="rtl"] .xrow{flex-direction:row-reverse}
+[dir="rtl"] .xrow .bar{background:linear-gradient(-90deg, var(--cyan-dim), var(--cyan))}
+[dir="rtl"] .fchip::after{animation-name:scan-rtl}
+@keyframes scan-rtl{40%,100%{transform:translateX(-110%)}}
+[dir="rtl"] .lm>span,[dir="rtl"] .rv{will-change:auto}
+[dir="rtl"] .mq-track span{direction:rtl}
+@media(max-width:900px){[dir="rtl"] nav{gap:14px}}
 </style>
 </head>
 <body>
@@ -411,14 +462,14 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
     VORTEX<b>PT</b>
   </a>
   <div class="nlinks">
-    <a href="#viewport">VIEWPORT</a>
-    <a href="#features">FEATURES</a>
-    <a href="#how">HOW IT WORKS</a>
-    <a href="#pricing">PRICING</a>
-    <a href="#faq">FAQ</a>
+    <a href="#viewport" data-i18n="nav_viewport">VIEWPORT</a>
+    <a href="#features" data-i18n="nav_features">FEATURES</a>
+    <a href="#how" data-i18n="nav_how">HOW IT WORKS</a>
+    <a href="#pricing" data-i18n="nav_pricing">PRICING</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
   </div>
   <button class="lang" id="langBtn" aria-label="Arabic version">عربي</button>
-  <a class="ncta" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe">DOWNLOAD v0.9.5</a>
+  <a class="ncta" data-i18n="nav_download" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe">DOWNLOAD v0.9.5</a>
 </nav>
 
 <!-- ================= HERO : THE SHEET ================= -->
@@ -428,32 +479,32 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   <div class="wrap hero-grid">
     <div>
       <div class="hmeta rv" style="--d:.05s">
-        <span>SHEET <b>S-001</b></span><span>REV <b>0.9.5</b></span><span>MODE <b>OFFLINE</b></span><span>UNITS <b>mm / MPa</b></span>
+        <span data-i18n="hero_sheet" data-i18n-html>SHEET <b>S-001</b></span><span data-i18n="hero_rev" data-i18n-html>REV <b>0.9.5</b></span><span data-i18n="hero_mode" data-i18n-html>MODE <b>OFFLINE</b></span><span data-i18n="hero_units" data-i18n-html>UNITS <b>mm / MPa</b></span>
       </div>
       <h1>
-        <span data-scramble aria-label="POST-TENSION">POST-TENSION</span><br>
-        <span data-scramble class="amber" aria-label="SHOP DRAWINGS">SHOP DRAWINGS</span>
+        <span data-scramble data-i18n="hero_t1" aria-label="POST-TENSION">POST-TENSION</span><br>
+        <span data-scramble class="amber" data-i18n="hero_t2" aria-label="SHOP DRAWINGS">SHOP DRAWINGS</span>
       </h1>
-      <p class="lead rv" style="--d:.2s">
+      <p class="lead rv" style="--d:.2s" data-i18n="hero_lead" data-i18n-html>
         From <strong>RAM Concept</strong> to site-ready drawings in minutes. Vortex PT extracts your
         structural model, renders a <strong>live 2D CAD canvas</strong> with tendon drape profiles, and exports
         <strong>layered AutoCAD DXF</strong> + full <strong>Excel schedules</strong>. Offline, licensed per PC.
       </p>
       <div class="hero-cta rv" style="--d:.3s">
-        <a class="btn btn-p" id="dlBtn" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD INSTALLER · v0.9.5</a>
-        <a class="btn btn-g" href="#pricing">SEE PRICING →</a>
+        <a class="btn btn-p" id="dlBtn" data-i18n="hero_dl" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD INSTALLER · v0.9.5</a>
+        <a class="btn btn-g" href="#pricing" data-i18n="hero_pricing">SEE PRICING →</a>
       </div>
-      <p class="hnote rv mono" style="--d:.36s; font-size:11px; letter-spacing:.14em; color:var(--txt-dim); margin-top:14px">WINDOWS 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">RELEASE NOTES</a> · FREE 7-DAY TRIAL — FULL FEATURES</p>
+      <p class="hnote rv mono" style="--d:.36s; font-size:11px; letter-spacing:.14em; color:var(--txt-dim); margin-top:14px" data-i18n="hero_note" data-i18n-html>WINDOWS 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">RELEASE NOTES</a> · FREE 7-DAY TRIAL — FULL FEATURES</p>
       <div class="stats rv" style="--d:.4s">
-        <div class="stat"><b><em>12</em></b><span>CAD LAYERS</span></div>
-        <div class="stat"><b><em>4</em></b><span>EXCEL SHEETS</span></div>
-        <div class="stat"><b><em>100%</em></b><span>OFFLINE AFTER ACTIVATION</span></div>
+        <div class="stat"><b><em>12</em></b><span data-i18n="hero_stat1">CAD LAYERS</span></div>
+        <div class="stat"><b><em>4</em></b><span data-i18n="hero_stat2">EXCEL SHEETS</span></div>
+        <div class="stat"><b><em>100%</em></b><span data-i18n="hero_stat3">OFFLINE AFTER ACTIVATION</span></div>
       </div>
     </div>
 
     <!-- Detail A : tendon elevation -->
     <div class="dpanel corner rv" style="--d:.25s">
-      <div class="dtag"><span>DETAIL A — TENDON ELEVATION</span><span>SCALE 1:50</span></div>
+      <div class="dtag"><span data-i18n="detail_a">DETAIL A — TENDON ELEVATION</span><span data-i18n="detail_scale">SCALE 1:50</span></div>
       <svg class="drape" viewBox="0 0 560 300" aria-label="Animated tendon drape elevation drawing">
         <defs>
           <pattern id="hx" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8 L8 0" stroke="#16324f" stroke-width="1"/></pattern>
@@ -493,24 +544,24 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <text class="dtx" style="--i:6" x="120" y="212" fill="#ff5dc8">CHAIRS @ 1.2 m — H = 60</text>
       </svg>
       <div class="tblock">
-        <div class="tcell"><i>DWG NO.</i><b>VP-2026-001</b></div>
-        <div class="tcell"><i>DRAWN BY</i><b>VORTEX PT</b></div>
-        <div class="tcell"><i>DATE</i><b id="tbDate">—</b></div>
-        <div class="tcell"><i>STATUS</i><b style="color:var(--amber)">FOR CONSTRUCTION</b></div>
+        <div class="tcell"><i data-i18n="tb_dwgno">DWG NO.</i><b>VP-2026-001</b></div>
+        <div class="tcell"><i data-i18n="tb_drawnby">DRAWN BY</i><b>VORTEX PT</b></div>
+        <div class="tcell"><i data-i18n="tb_date">DATE</i><b id="tbDate">—</b></div>
+        <div class="tcell"><i data-i18n="tb_status">STATUS</i><b style="color:var(--amber)" data-i18n="tb_forconstr">FOR CONSTRUCTION</b></div>
       </div>
     </div>
   </div>
-  <div class="scrollcue">SCROLL</div>
+  <div class="scrollcue" data-i18n="scroll">SCROLL</div>
 </header>
 
 <!-- ================= MARQUEE ================= -->
 <div class="mq" aria-hidden="true">
   <div class="mq-track" id="mqTrack">
-    <span>RAM CONCEPT <b>.CPT</b></span><span>⌁</span><span>ADAPT-BUILDER <b>.INP</b></span><span>⌁</span>
-    <span>AUTOCAD <b>DXF</b> EXPORT</span><span>⌁</span><span>EXCEL <b>BBS</b> + CSV</span><span>⌁</span>
-    <span>PARABOLIC <b>DRAPE</b></span><span>⌁</span><span>CHAIR <b>HEIGHTS</b></span><span>⌁</span>
-    <span><b>ELONGATION</b> COMPUTE</span><span>⌁</span><span>LIVE / DEAD <b>ANCHORS</b></span><span>⌁</span>
-    <span><b>100%</b> OFFLINE</span><span>⌁</span>
+    <span data-i18n-html data-i18n="mq_1">RAM CONCEPT <b>.CPT</b></span><span>⌁</span><span data-i18n-html data-i18n="mq_2">ADAPT-BUILDER <b>.INP</b></span><span>⌁</span>
+    <span data-i18n-html data-i18n="mq_3">AUTOCAD <b>DXF</b> EXPORT</span><span>⌁</span><span data-i18n-html data-i18n="mq_4">EXCEL <b>BBS</b> + CSV</span><span>⌁</span>
+    <span data-i18n-html data-i18n="mq_5">PARABOLIC <b>DRAPE</b></span><span>⌁</span><span data-i18n-html data-i18n="mq_6">CHAIR <b>HEIGHTS</b></span><span>⌁</span>
+    <span data-i18n-html data-i18n="mq_7"><b>ELONGATION</b> COMPUTE</span><span>⌁</span><span data-i18n-html data-i18n="mq_8">LIVE / DEAD <b>ANCHORS</b></span><span>⌁</span>
+    <span data-i18n-html data-i18n="mq_9"><b>100%</b> OFFLINE</span><span>⌁</span>
   </div>
 </div>
 
@@ -519,18 +570,18 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   <div class="wrap">
     <div class="vp-head">
       <div>
-        <div class="kick rv">01 — MODEL VIEWPORT</div>
-        <h2 class="h2"><span class="lm"><span>Rotate the slab.</span></span><span class="lm" style="--d:.12s"><span>Click a tendon.</span></span></h2>
-        <p class="sub rv" style="--d:.15s">This is what extraction feels like — the same model Vortex PT pulls from your <span class="mono" style="color:var(--cyan)">.cpt</span> file, draped, chaired and ready to detail. Drag to orbit, scroll to zoom, pick any strand.</p>
+        <div class="kick rv" data-i18n="vp_kick">01 — MODEL VIEWPORT</div>
+        <h2 class="h2"><span class="lm"><span data-i18n="vp_h1">Rotate the slab.</span></span><span class="lm" style="--d:.12s"><span data-i18n="vp_h2">Click a tendon.</span></span></h2>
+        <p class="sub rv" style="--d:.15s" data-i18n-html data-i18n="vp_sub">This is what extraction feels like — the same model Vortex PT pulls from your <span class="mono" style="color:var(--cyan)">.cpt</span> file, draped, chaired and ready to detail. Drag to orbit, scroll to zoom, pick any strand.</p>
       </div>
-      <div class="rv mono" style="--d:.2s; font-size:10px; letter-spacing:.26em; color:var(--txt-dim); text-align:right; line-height:2.4">
+      <div class="rv mono" style="--d:.2s; font-size:10px; letter-spacing:.26em; color:var(--txt-dim); text-align:right; line-height:2.4" data-i18n-html data-i18n="vp_side">
         PERSPECTIVE · ORBIT<br>LAYER: <b style="color:var(--amber)">PT-TENDONS-X</b><br>UNITS: m · mm
       </div>
     </div>
 
     <div class="vp-grid rv" style="--d:.1s">
       <aside class="lpanel">
-        <div class="lp-title"><span>LAYERS</span><span style="color:var(--amber)">6/6</span></div>
+        <div class="lp-title"><span data-i18n="vp_layers">LAYERS</span><span style="color:var(--amber)">6/6</span></div>
         <label class="lrow"><input type="checkbox" checked data-layer="slab"><span class="lsw" style="background:#4fd8ff"></span><span class="lname">SLAB-GRID</span><span class="leye">◉</span></label>
         <label class="lrow"><input type="checkbox" checked data-layer="tendX"><span class="lsw" style="background:#ffb02e"></span><span class="lname">PT-TENDONS-X</span><span class="leye">◉</span></label>
         <label class="lrow"><input type="checkbox" checked data-layer="tendZ"><span class="lsw" style="background:#2f8fc0"></span><span class="lname">PT-TENDONS-Z</span><span class="leye">◉</span></label>
@@ -538,33 +589,33 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
         <label class="lrow"><input type="checkbox" checked data-layer="chairs"><span class="lsw" style="background:#ff5dc8"></span><span class="lname">CHAIRS</span><span class="leye">◉</span></label>
         <label class="lrow"><input type="checkbox" checked data-layer="dims"><span class="lsw" style="background:#3a6c9e"></span><span class="lname">DIMENSIONS</span><span class="leye">◉</span></label>
         <div class="lsep"></div>
-        <div class="lp-title"><span>SELECTION</span><span id="selDot" style="color:var(--txt-dim)">○</span></div>
+        <div class="lp-title"><span data-i18n="vp_selection">SELECTION</span><span id="selDot" style="color:var(--txt-dim)">○</span></div>
         <div class="selbox" id="selBox">
           <svg class="sd" width="100%" height="34" viewBox="0 0 200 34"><path d="M4 8 Q100 52 196 8"/></svg>
-          <span id="selText">NO SELECTION —<br>click any tendon in the viewport</span>
+          <span id="selText" data-i18n-html data-i18n="vp_nosel">NO SELECTION —<br>click any tendon in the viewport</span>
         </div>
       </aside>
 
       <div class="vp-stage" id="vpStage">
-        <canvas id="gl" role="img" aria-label="Interactive 3D model viewport: slab, post-tension tendons, columns and chairs. Drag to orbit, scroll to zoom, click a tendon to inspect it."></canvas>
-        <div class="vp-hud tl">MODEL: ROOF FLOOR · VP-2026-001</div>
-        <div class="vp-hud tr">DRAG ORBIT · WHEEL ZOOM<br>CLICK = INSPECT</div>
+        <canvas id="gl" role="img" aria-label="Interactive 3D model viewport: slab, post-tension tendons, columns and chairs. Drag to orbit, scroll to zoom, click a tendon to inspect it." data-i18n-aria="vp_canvas_aria"></canvas>
+        <div class="vp-hud tl" data-i18n="vp_hud_model">MODEL: ROOF FLOOR · VP-2026-001</div>
+        <div class="vp-hud tr" data-i18n-html data-i18n="vp_hud_ctrl">DRAG ORBIT · WHEEL ZOOM<br>CLICK = INSPECT</div>
         <div class="vp-hud bl" id="vpCoords">θ 028° · φ 064° · R 30.0</div>
-        <div class="vp-hud br">▣ WEBGL · 60 FPS TARGET</div>
+        <div class="vp-hud br" data-i18n="vp_hud_webgl">▣ WEBGL · 60 FPS TARGET</div>
         <div class="vp-tools">
-          <button id="zIn" aria-label="Zoom in">+</button>
-          <button id="zOut" aria-label="Zoom out">−</button>
-          <button id="zReset" aria-label="Reset view">⌂</button>
+          <button id="zIn" aria-label="Zoom in" data-i18n-aria="vp_zoomin">+</button>
+          <button id="zOut" aria-label="Zoom out" data-i18n-aria="vp_zoomout">−</button>
+          <button id="zReset" aria-label="Reset view" data-i18n-aria="vp_reset">⌂</button>
         </div>
-        <button class="runbtn" id="runBtn">▶ RUN STRESSING SEQUENCE</button>
+        <button class="runbtn" id="runBtn" data-i18n="vp_run">▶ RUN STRESSING SEQUENCE</button>
       </div>
     </div>
 
     <div class="vp-stats rv" style="--d:.2s">
-      <div class="vstat"><b><span class="count" data-to="12">0</span><i>TL</i></b><span>TENDONS EXTRACTED</span></div>
-      <div class="vstat"><b><span class="count" data-to="684">0</span><i>m</i></b><span>TOTAL TENDON LENGTH</span></div>
-      <div class="vstat"><b><span class="count" data-to="540">0</span><i>m²</i></b><span>SLAB AREA</span></div>
-      <div class="vstat"><b><span class="count" data-to="96">0</span><i>ea</i></b><span>CHAIRS SCHEDULED</span></div>
+      <div class="vstat"><b><span class="count" data-to="12">0</span><i>TL</i></b><span data-i18n="vp_stat1">TENDONS EXTRACTED</span></div>
+      <div class="vstat"><b><span class="count" data-to="684">0</span><i>m</i></b><span data-i18n="vp_stat2">TOTAL TENDON LENGTH</span></div>
+      <div class="vstat"><b><span class="count" data-to="540">0</span><i>m²</i></b><span data-i18n="vp_stat3">SLAB AREA</span></div>
+      <div class="vstat"><b><span class="count" data-to="96">0</span><i>ea</i></b><span data-i18n="vp_stat4">CHAIRS SCHEDULED</span></div>
     </div>
   </div>
 </section>
@@ -572,16 +623,16 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
 <!-- ================= 02 · CAPABILITIES ================= -->
 <section class="cap-sec" id="features">
   <div class="wrap">
-    <div class="kick rv">02 — CAPABILITIES</div>
-    <h2 class="h2"><span class="lm"><span>Everything between</span></span><span class="lm" style="--d:.12s"><span>model and site.</span></span></h2>
-    <p class="sub rv" style="--d:.15s">One desktop app covering the full post-tension detailing workflow — extraction, inspection, profiling, and export.</p>
+    <div class="kick rv" data-i18n="cap_kick">02 — CAPABILITIES</div>
+    <h2 class="h2"><span class="lm"><span data-i18n="cap_h1">Everything between</span></span><span class="lm" style="--d:.12s"><span data-i18n="cap_h2">model and site.</span></span></h2>
+    <p class="sub rv" style="--d:.15s" data-i18n="cap_sub">One desktop app covering the full post-tension detailing workflow — extraction, inspection, profiling, and export.</p>
 
     <div class="bento">
       <!-- profiler (big) -->
       <article class="cell c-prof rv">
         <span class="cidx">F-01</span>
-        <h3>Drape Profiler</h3>
-        <p>Parabolic drape curves, chair heights, live vs dead anchors and elongation computation. Drag the drape depth — the profile, chairs and elongation recalculate live.</p>
+        <h3 data-i18n="f1_t">Drape Profiler</h3>
+        <p data-i18n="f1_p">Parabolic drape curves, chair heights, live vs dead anchors and elongation computation. Drag the drape depth — the profile, chairs and elongation recalculate live.</p>
         <svg class="prof-svg" viewBox="0 0 560 240">
           <line class="ln" x1="20" y1="60" x2="540" y2="60"/>
           <line class="ln" x1="20" y1="170" x2="540" y2="170"/>
@@ -595,24 +646,24 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
           <text x="44" y="52">4 × Ø12.7 — TYPICAL BAND</text>
           <text id="pch" x="120" y="196" fill="#ff5dc8">CHAIR H = 55 mm</text>
         </svg>
-        <div class="pctl"><span>MIDSPAN DRAPE</span><input type="range" id="prange" min="40" max="140" value="90" step="1" aria-label="Adjust drape depth"><span id="prangeVal" style="color:var(--amber)">90 mm</span></div>
-        <div class="pread"><span>ELONG ≈ <b id="pelong">216 mm</b></span><span>ANCHOR: <b>LIVE / DEAD</b></span><span>f<sub>pu</sub> = <b>1860 MPa</b></span></div>
+        <div class="pctl"><span data-i18n="f1_drape">MIDSPAN DRAPE</span><input type="range" id="prange" min="40" max="140" value="90" step="1" aria-label="Adjust drape depth" data-i18n-aria="f1_drape_aria"><span id="prangeVal" style="color:var(--amber)">90 mm</span></div>
+        <div class="pread"><span data-i18n-html data-i18n="f1_elong">ELONG ≈ <b id="pelong">216 mm</b></span><span data-i18n="f1_anchor">ANCHOR: <b>LIVE / DEAD</b></span><span>f<sub>pu</sub> = <b>1860 MPa</b></span></div>
       </article>
 
       <!-- extraction -->
       <article class="cell c-ext rv" style="--d:.08s">
         <span class="cidx">F-02</span>
-        <h3>Direct Model Extraction</h3>
-        <p>RAM Concept (.cpt) plus ADAPT-Builder via .inp — slabs, columns, walls, beams, tendons, rebar.</p>
+        <h3 data-i18n="f2_t">Direct Model Extraction</h3>
+        <p data-i18n="f2_p">RAM Concept (.cpt) plus ADAPT-Builder via .inp — slabs, columns, walls, beams, tendons, rebar.</p>
         <div class="fchips"><span class="fchip">MODEL.CPT</span><span class="fchip">EXPORT.INP</span><span class="fchip">REBAR.CSV</span></div>
-        <div class="fsrc">SOURCE ▸ RAM CONCEPT · ADAPT-BUILDER</div>
+        <div class="fsrc" data-i18n="f2_src">SOURCE ▸ RAM CONCEPT · ADAPT-BUILDER</div>
       </article>
 
       <!-- live cad -->
       <article class="cell c-cad rv" style="--d:.14s">
         <span class="cidx">F-03</span>
-        <h3>Live CAD Canvas</h3>
-        <p>Pan, zoom, layer toggles. Click any tendon to inspect it — move your cursor inside:</p>
+        <h3 data-i18n="f3_t">Live CAD Canvas</h3>
+        <p data-i18n="f3_p">Pan, zoom, layer toggles. Click any tendon to inspect it — move your cursor inside:</p>
         <div class="minicad" id="minicad">
           <svg viewBox="0 0 300 150" preserveAspectRatio="none"><path d="M10 40 Q150 130 290 40" stroke="#ffb02e" stroke-width="2" fill="none"/><line x1="10" y1="24" x2="290" y2="24" stroke="#2f8fc0"/><line x1="10" y1="126" x2="290" y2="126" stroke="#2f8fc0"/></svg>
           <div class="chx" id="chx"></div><div class="chy" id="chy"></div><div class="chl" id="chl">X:0 Y:0</div>
@@ -622,8 +673,8 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       <!-- dxf -->
       <article class="cell c-dxf rv" style="--d:.1s">
         <span class="cidx">F-04</span>
-        <h3>DXF Shop Drawings</h3>
-        <p>Layered AutoCAD sheets with border, title block and embedded tendon schedule table.</p>
+        <h3 data-i18n="f4_t">DXF Shop Drawings</h3>
+        <p data-i18n="f4_p">Layered AutoCAD sheets with border, title block and embedded tendon schedule table.</p>
         <div class="sheets">
           <div class="sheet"><i></i><i style="width:60%"></i><i style="width:80%"></i></div>
           <div class="sheet"><i></i><i style="width:70%"></i><i style="width:45%"></i></div>
@@ -634,23 +685,23 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       <!-- excel -->
       <article class="cell c-xls rv" style="--d:.16s">
         <span class="cidx">F-05</span>
-        <h3>Excel + BBS</h3>
-        <p>Takeoff summary, PT schedule, chair heights detail and full rebar bending schedules + CSV.</p>
+        <h3 data-i18n="f5_t">Excel + BBS</h3>
+        <p data-i18n="f5_p">Takeoff summary, PT schedule, chair heights detail and full rebar bending schedules + CSV.</p>
         <div class="xrows">
-          <div class="xrow"><span style="width:70px">TAKEOFF</span><span class="bar" style="--w:88%; --d:.1s"></span><span>88%</span></div>
-          <div class="xrow"><span style="width:70px">PT SCHED</span><span class="bar" style="--w:72%; --d:.25s"></span><span>72%</span></div>
-          <div class="xrow"><span style="width:70px">CHAIRS</span><span class="bar" style="--w:54%; --d:.4s"></span><span>54%</span></div>
-          <div class="xrow"><span style="width:70px">REBAR BBS</span><span class="bar" style="--w:95%; --d:.55s"></span><span>95%</span></div>
+          <div class="xrow"><span style="width:70px" data-i18n="f5_r1">TAKEOFF</span><span class="bar" style="--w:88%; --d:.1s"></span><span>88%</span></div>
+          <div class="xrow"><span style="width:70px" data-i18n="f5_r2">PT SCHED</span><span class="bar" style="--w:72%; --d:.25s"></span><span>72%</span></div>
+          <div class="xrow"><span style="width:70px" data-i18n="f5_r3">CHAIRS</span><span class="bar" style="--w:54%; --d:.4s"></span><span>54%</span></div>
+          <div class="xrow"><span style="width:70px" data-i18n="f5_r4">REBAR BBS</span><span class="bar" style="--w:95%; --d:.55s"></span><span>95%</span></div>
         </div>
       </article>
 
       <!-- licensing -->
       <article class="cell c-lic rv" style="--d:.22s">
         <span class="cidx">F-06</span>
-        <h3>Per-PC Licensing</h3>
-        <p>Machine-locked keys, offline activation, expiry reminders, free updates in-period.</p>
+        <h3 data-i18n="f6_t">Per-PC Licensing</h3>
+        <p data-i18n="f6_p">Machine-locked keys, offline activation, expiry reminders, free updates in-period.</p>
         <div class="keyid"><span id="keyid"></span><span class="cur"></span></div>
-        <div class="licstat">STATUS: <b>OFFLINE · MACHINE-LOCKED</b></div>
+        <div class="licstat" data-i18n-html data-i18n="f6_stat">STATUS: <b>OFFLINE · MACHINE-LOCKED</b></div>
       </article>
     </div>
   </div>
@@ -659,36 +710,36 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
 <!-- ================= 03 · HOW (PAPER) ================= -->
 <section class="paper" id="how">
   <div class="wrap">
-    <div class="kick rv">03 — GET STARTED</div>
-    <h2 class="h2"><span class="lm"><span>Licensed in three steps.</span></span></h2>
-    <p class="sub rv" style="--d:.12s">No account maze, no waiting. Pay, send one ID, start drawing.</p>
+    <div class="kick rv" data-i18n="how_kick">03 — GET STARTED</div>
+    <h2 class="h2"><span class="lm"><span data-i18n="how_h">Licensed in three steps.</span></span></h2>
+    <p class="sub rv" style="--d:.12s" data-i18n="how_sub">No account maze, no waiting. Pay, send one ID, start drawing.</p>
 
     <div class="steps">
-      <div class="stamp rv" style="--d:.5s">7-DAY<br>FREE TRIAL<br>FULL FEATURES</div>
+      <div class="stamp rv" style="--d:.5s" data-i18n-html data-i18n="how_stamp">7-DAY<br>FREE TRIAL<br>FULL FEATURES</div>
       <div class="step rv">
         <div class="stepnum">01</div>
-        <h3>Order &amp; confirm</h3>
-        <p>Grab the installer above or pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.</p>
+        <h3 data-i18n="how_s1t">Order &amp; confirm</h3>
+        <p data-i18n-html data-i18n="how_s1p">Grab the installer above or pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.</p>
       </div>
       <div class="step rv" style="--d:.12s">
         <div class="stepnum">02</div>
-        <h3>Send your Machine&nbsp;ID</h3>
-        <p>Install Vortex PT, click <code>Open Model</code> — copy the <code>Machine ID</code> from the Activation window and WhatsApp it to us with your name.</p>
+        <h3 data-i18n="how_s2t">Send your Machine&nbsp;ID</h3>
+        <p data-i18n-html data-i18n="how_s2p">Install Vortex PT, click <code>Open Model</code> — copy the <code>Machine ID</code> from the Activation window and WhatsApp it to us with your name.</p>
       </div>
       <div class="step rv" style="--d:.24s">
         <div class="stepnum">03</div>
-        <h3>Activate &amp; draw</h3>
-        <p>We reply with your key — paste, <strong>Activate</strong>, done. Offline forever after.</p>
+        <h3 data-i18n="how_s3t">Activate &amp; draw</h3>
+        <p data-i18n-html data-i18n="how_s3p">We reply with your key — paste, <strong>Activate</strong>, done. Offline forever after.</p>
       </div>
     </div>
 
     <!-- field strip -->
     <div class="field">
-      <div class="kick rv">FROM MODEL TO SITE</div>
+      <div class="kick rv" data-i18n="how_field">FROM MODEL TO SITE</div>
       <div class="fstrip">
-        <figure class="fig rv"><img src="https://picsum.photos/seed/pt-analysis-model/800/600" alt="Structural analysis model" loading="lazy"><figcaption><span><b>01</b> MODEL — RAM CONCEPT</span><span>.CPT</span></figcaption></figure>
-        <figure class="fig rv" style="--d:.12s"><img src="https://picsum.photos/seed/pt-shop-drawing-desk/800/600" alt="Shop drawing production" loading="lazy"><figcaption><span><b>02</b> SHEET — DXF + SCHEDULES</span><span>.DXF</span></figcaption></figure>
-        <figure class="fig rv" style="--d:.24s"><img src="https://picsum.photos/seed/pt-stressing-site/800/600" alt="Post-tension stressing on site" loading="lazy"><figcaption><span><b>03</b> SITE — STRESSING DAY</span><span>FIELD</span></figcaption></figure>
+        <figure class="fig rv"><img src="https://picsum.photos/seed/pt-analysis-model/800/600" alt="Structural analysis model" data-i18n-alt="fig1_alt" loading="lazy"><figcaption><span data-i18n-html data-i18n="fig1_cap"><b>01</b> MODEL — RAM CONCEPT</span><span>.CPT</span></figcaption></figure>
+        <figure class="fig rv" style="--d:.12s"><img src="https://picsum.photos/seed/pt-shop-drawing-desk/800/600" alt="Shop drawing production" data-i18n-alt="fig2_alt" loading="lazy"><figcaption><span data-i18n-html data-i18n="fig2_cap"><b>02</b> SHEET — DXF + SCHEDULES</span><span>.DXF</span></figcaption></figure>
+        <figure class="fig rv" style="--d:.24s"><img src="https://picsum.photos/seed/pt-stressing-site/800/600" alt="Post-tension stressing on site" data-i18n-alt="fig3_alt" loading="lazy"><figcaption><span data-i18n-html data-i18n="fig3_cap"><b>03</b> SITE — STRESSING DAY</span><span>FIELD</span></figcaption></figure>
       </div>
     </div>
   </div>
@@ -697,44 +748,44 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
 <!-- ================= 04 · PRICING ================= -->
 <section class="price-sec" id="pricing">
   <div class="wrap">
-    <div class="kick rv">04 — PRICING</div>
-    <h2 class="h2"><span class="lm"><span>One license. One PC.</span></span><span class="lm" style="--d:.12s"><span>No subscription traps.</span></span></h2>
-    <p class="sub rv" style="--d:.15s">Every plan ships the full toolset — extraction, CAD canvas, drape profiler, DXF + Excel exports.</p>
+    <div class="kick rv" data-i18n="pr_kick">04 — PRICING</div>
+    <h2 class="h2"><span class="lm"><span data-i18n="pr_h1">One license. One PC.</span></span><span class="lm" style="--d:.12s"><span data-i18n="pr_h2">No subscription traps.</span></span></h2>
+    <p class="sub rv" style="--d:.15s" data-i18n="pr_sub">Every plan ships the full toolset — extraction, CAD canvas, drape profiler, DXF + Excel exports.</p>
 
     <div class="plans">
       <article class="plan tilt rv">
-        <div class="ptag">PLAN / MONTHLY</div>
+        <div class="ptag" data-i18n="pr_tag_m">PLAN / MONTHLY</div>
         <div class="price">$25<sub> USD</sub></div>
-        <div class="per">PER 30 DAYS</div>
-        <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
-        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Monthly%20plan">BUY MONTHLY</a>
-        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
+        <div class="per" data-i18n="pr_per_m">PER 30 DAYS</div>
+        <ul><li data-i18n="pr_li1">Full features</li><li data-i18n="pr_li2">1 PC license</li><li data-i18n="pr_li3">Free updates in-period</li><li data-i18n="pr_li4">WhatsApp support</li></ul>
+        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Monthly%20plan" data-i18n="pr_buy_m">BUY MONTHLY</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download data-i18n="pr_try">⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
 
       <article class="plan plan-hot tilt rv" style="--d:.12s">
-        <div class="hot-stamp">MOST POPULAR</div>
-        <div class="ptag">PLAN / YEARLY</div>
+        <div class="hot-stamp" data-i18n="pr_popular">MOST POPULAR</div>
+        <div class="ptag" data-i18n="pr_tag_y">PLAN / YEARLY</div>
         <div class="price">$250<sub> USD</sub></div>
-        <div class="per">PER 12 MONTHS · SAVE $50</div>
-        <ul><li>Full features</li><li>1 PC license</li><li>Free updates in-period</li><li>Priority WhatsApp support</li></ul>
-        <a class="btn btn-p wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Yearly%20plan">BUY YEARLY</a>
-        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
+        <div class="per" data-i18n="pr_per_y">PER 12 MONTHS · SAVE $50</div>
+        <ul><li data-i18n="pr_li1">Full features</li><li data-i18n="pr_li2">1 PC license</li><li data-i18n="pr_li3">Free updates in-period</li><li data-i18n="pr_li4y">Priority WhatsApp support</li></ul>
+        <a class="btn btn-p wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Yearly%20plan" data-i18n="pr_buy_y">BUY YEARLY</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download data-i18n="pr_try">⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
 
       <article class="plan plan-life tilt rv" style="--d:.24s">
-        <div class="ptag">PLAN / LIFETIME</div>
+        <div class="ptag" data-i18n="pr_tag_l">PLAN / LIFETIME</div>
         <div class="price">$1000<sub> USD</sub></div>
-        <div class="per">PAY ONCE · YOURS FOREVER</div>
-        <ul><li>Full features</li><li>1 PC, forever</li><li>Free updates in-period</li><li>WhatsApp support</li></ul>
-        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Lifetime%20license">BUY LIFETIME</a>
-        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
+        <div class="per" data-i18n="pr_per_l">PAY ONCE · YOURS FOREVER</div>
+        <ul><li data-i18n="pr_li1">Full features</li><li data-i18n="pr_li2l">1 PC, forever</li><li data-i18n="pr_li3">Free updates in-period</li><li data-i18n="pr_li4">WhatsApp support</li></ul>
+        <a class="btn btn-g wa-buy" href="https://wa.me/201552228306?text=Vortex%20PT%20—%20Lifetime%20license" data-i18n="pr_buy_l">BUY LIFETIME</a>
+        <a class="btn btn-dl" style="margin-top:10px" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download data-i18n="pr_try">⭳ DOWNLOAD · TRY 7 DAYS FREE</a>
       </article>
     </div>
 
     <div class="pnote rv" style="--d:.3s">
-      <span>REPLACING YOUR PC? MESSAGE US TO TRANSFER YOUR LICENSE</span>
-      <span>COMPANY MULTI-SEAT DEALS ON WHATSAPP</span>
-      <span>PAID KEYS NON-REFUNDABLE AFTER DELIVERY — TRY THE 7-DAY TRIAL FIRST</span>
+      <span data-i18n="pr_note1">REPLACING YOUR PC? MESSAGE US TO TRANSFER YOUR LICENSE</span>
+      <span data-i18n="pr_note2">COMPANY MULTI-SEAT DEALS ON WHATSAPP</span>
+      <span data-i18n="pr_note3">PAID KEYS NON-REFUNDABLE AFTER DELIVERY — TRY THE 7-DAY TRIAL FIRST</span>
     </div>
   </div>
 </section>
@@ -742,29 +793,29 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
 <!-- ================= 05 · FAQ ================= -->
 <section class="faq-sec" id="faq">
   <div class="wrap">
-    <div class="kick rv">05 — FAQ</div>
-    <h2 class="h2"><span class="lm"><span>Questions, answered.</span></span></h2>
+    <div class="kick rv" data-i18n="faq_kick">05 — FAQ</div>
+    <h2 class="h2"><span class="lm"><span data-i18n="faq_h">Questions, answered.</span></span></h2>
 
     <div class="faq-list rv" style="--d:.1s">
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false" aria-controls="faq-a1" id="faq-a1-btn"><span class="qi">Q.01</span>Does it need internet?<span class="pm"></span></button>
-        <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-a1-btn" hidden><div><p>Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a1" id="faq-a1-btn"><span class="qi">Q.01</span><span data-i18n="faq_q1">Does it need internet?</span><span class="pm"></span></button>
+        <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-a1-btn" hidden><div><p data-i18n-html data-i18n="faq_a1">Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false" aria-controls="faq-a2" id="faq-a2-btn"><span class="qi">Q.02</span>Which files does it open?<span class="pm"></span></button>
-        <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-a2-btn" hidden><div><p>RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a2" id="faq-a2-btn"><span class="qi">Q.02</span><span data-i18n="faq_q2">Which files does it open?</span><span class="pm"></span></button>
+        <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-a2-btn" hidden><div><p data-i18n-html data-i18n="faq_a2">RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false" aria-controls="faq-a3" id="faq-a3-btn"><span class="qi">Q.03</span>What exactly do I export?<span class="pm"></span></button>
-        <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-a3-btn" hidden><div><p>Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a3" id="faq-a3-btn"><span class="qi">Q.03</span><span data-i18n="faq_q3">What exactly do I export?</span><span class="pm"></span></button>
+        <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-a3-btn" hidden><div><p data-i18n="faq_a3">Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false" aria-controls="faq-a4" id="faq-a4-btn"><span class="qi">Q.04</span>How do updates work?<span class="pm"></span></button>
-        <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-a4-btn" hidden><div><p>Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed. Release notes and installers live on <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest">GitHub Releases</a>.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a4" id="faq-a4-btn"><span class="qi">Q.04</span><span data-i18n="faq_q4">How do updates work?</span><span class="pm"></span></button>
+        <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-a4-btn" hidden><div><p data-i18n-html data-i18n="faq_a4">Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed. Release notes and installers live on <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest">GitHub Releases</a>.</p></div></div>
       </div>
       <div class="faq-i">
-        <button class="faq-q" aria-expanded="false" aria-controls="faq-a5" id="faq-a5-btn"><span class="qi">Q.05</span>Refund policy?<span class="pm"></span></button>
-        <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-a5-btn" hidden><div><p>Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/201552228306?text=Vortex%20PT">WhatsApp</a>.</p></div></div>
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a5" id="faq-a5-btn"><span class="qi">Q.05</span><span data-i18n="faq_q5">Refund policy?</span><span class="pm"></span></button>
+        <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-a5-btn" hidden><div><p data-i18n-html data-i18n="faq_a5">Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/201552228306?text=Vortex%20PT">WhatsApp</a>.</p></div></div>
       </div>
     </div>
   </div>
@@ -776,14 +827,14 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
   <div class="wrap">
     <div class="fgrid">
       <div>
-        <h4>Ready to <span>detail?</span></h4>
-        <p class="sub" style="margin:16px 0 28px">Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.</p>
+        <h4 data-i18n-html data-i18n="ft_h">Ready to <span>detail?</span></h4>
+        <p class="sub" style="margin:16px 0 28px" data-i18n="ft_p">Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.</p>
         <div style="display:flex; gap:14px; flex-wrap:wrap">
-          <a class="btn btn-p" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download>⭳ DOWNLOAD INSTALLER</a>
-          <a class="btn btn-g" href="https://wa.me/201552228306?text=Vortex%20PT">◈ CHAT ON WHATSAPP</a>
+          <a class="btn btn-p" href="https://github.com/ahmedelkholy8/VortexPT/releases/download/v0.9.5/VortexPT-Setup-0.9.5.exe" download data-i18n="ft_dl">⭳ DOWNLOAD INSTALLER</a>
+          <a class="btn btn-g" href="https://wa.me/201552228306?text=Vortex%20PT" data-i18n="ft_wa">◈ CHAT ON WHATSAPP</a>
         </div>
       </div>
-      <div class="fmeta">
+      <div class="fmeta" data-i18n-html data-i18n="ft_meta">
         <b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br>
         <b>INPUT</b> — .CPT · .INP<br>
         <b>OUTPUT</b> — .DXF · .XLSX · .CSV<br>
@@ -792,19 +843,19 @@ footer{position:relative; border-top:1px solid var(--line); background:var(--bg3
       </div>
     </div>
     <div class="copy">
-      <span>© <span id="yr">2026</span> VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.</span>
-      <span>⌖ DRAWN OFFLINE · CHECKED ON SITE</span>
+      <span data-i18n-html data-i18n="ft_copy">© <span id="yr">2026</span> VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.</span>
+      <span data-i18n="ft_copy2">⌖ DRAWN OFFLINE · CHECKED ON SITE</span>
     </div>
   </div>
 </footer>
 
 <!-- CAD status bar -->
 <div class="sbar" aria-hidden="true">
-  <div>X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b></div>
-  <div>LAYER: <b>PT-TENDONS</b></div>
-  <div>SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
+  <div data-i18n-html data-i18n="sb_xy">X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b></div>
+  <div data-i18n-html data-i18n="sb_layer">LAYER: <b>PT-TENDONS</b></div>
+  <div data-i18n-html data-i18n="sb_snap">SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span></div>
   <div class="grow"></div>
-  <div>LIC: <b>FREE TRIAL · 7 DAYS</b></div>
+  <div data-i18n-html data-i18n="sb_lic">LIC: <b>FREE TRIAL · 7 DAYS</b></div>
   <div>VORTEX PT v0.9.5</div>
 </div>
 
@@ -831,8 +882,183 @@ addEventListener('scroll', ()=> nav.classList.toggle('scrolled', scrollY>30), {p
 /* ---------- toast ---------- */
 const toast = $('#toast'); let toastT;
 function say(msg){ toast.textContent=msg; toast.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toast.classList.remove('show'),2800); }
-$$('a[download]').forEach(a=>a.addEventListener('click', ()=> say('Downloading Vortex PT installer — send us your Machine ID when prompted.')));
-$('#langBtn').addEventListener('click', ()=> say('النسخة العربية قيد التطوير — Arabic UI ships in the next build.'));
+
+/* ================= I18N (EN / AR) ================= */
+const I18N = {
+  en:{
+    langBtn:'EN', title:'Vortex PT — Post-Tension Detailing, Offline | RAM Concept .CPT → DXF + Excel',
+    nav_viewport:'VIEWPORT', nav_features:'FEATURES', nav_how:'HOW IT WORKS', nav_pricing:'PRICING', nav_faq:'FAQ', nav_download:'DOWNLOAD v0.9.5',
+    hero_sheet:'SHEET <b>S-001</b>', hero_rev:'REV <b>0.9.5</b>', hero_mode:'MODE <b>OFFLINE</b>', hero_units:'UNITS <b>mm / MPa</b>',
+    hero_t1:'POST-TENSION', hero_t2:'SHOP DRAWINGS',
+    hero_lead:'From <strong>RAM Concept</strong> to site-ready drawings in minutes. Vortex PT extracts your structural model, renders a <strong>live 2D CAD canvas</strong> with tendon drape profiles, and exports <strong>layered AutoCAD DXF</strong> + full <strong>Excel schedules</strong>. Offline, licensed per PC.',
+    hero_dl:'⭳ DOWNLOAD INSTALLER · v0.9.5', hero_pricing:'SEE PRICING →',
+    hero_note:'WINDOWS 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">RELEASE NOTES</a> · FREE 7-DAY TRIAL — FULL FEATURES',
+    hero_stat1:'CAD LAYERS', hero_stat2:'EXCEL SHEETS', hero_stat3:'OFFLINE AFTER ACTIVATION',
+    detail_a:'DETAIL A — TENDON ELEVATION', detail_scale:'SCALE 1:50',
+    tb_dwgno:'DWG NO.', tb_drawnby:'DRAWN BY', tb_date:'DATE', tb_status:'STATUS', tb_forconstr:'FOR CONSTRUCTION', scroll:'SCROLL',
+    mq_1:'RAM CONCEPT <b>.CPT</b>', mq_2:'ADAPT-BUILDER <b>.INP</b>', mq_3:'AUTOCAD <b>DXF</b> EXPORT', mq_4:'EXCEL <b>BBS</b> + CSV', mq_5:'PARABOLIC <b>DRAPE</b>', mq_6:'CHAIR <b>HEIGHTS</b>', mq_7:'<b>ELONGATION</b> COMPUTE', mq_8:'LIVE / DEAD <b>ANCHORS</b>', mq_9:'<b>100%</b> OFFLINE',
+    vp_kick:'01 — MODEL VIEWPORT', vp_h1:'Rotate the slab.', vp_h2:'Click a tendon.',
+    vp_sub:'This is what extraction feels like — the same model Vortex PT pulls from your <span class="mono" style="color:var(--cyan)">.cpt</span> file, draped, chaired and ready to detail. Drag to orbit, scroll to zoom, pick any strand.',
+    vp_side:'PERSPECTIVE · ORBIT<br>LAYER: <b style="color:var(--amber)">PT-TENDONS-X</b><br>UNITS: m · mm',
+    vp_layers:'LAYERS', vp_selection:'SELECTION', vp_nosel:'NO SELECTION —<br>click any tendon in the viewport',
+    vp_canvas_aria:'Interactive 3D model viewport: slab, post-tension tendons, columns and chairs. Drag to orbit, scroll to zoom, click a tendon to inspect it.',
+    vp_hud_model:'MODEL: ROOF FLOOR · VP-2026-001', vp_hud_ctrl:'DRAG ORBIT · WHEEL ZOOM<br>CLICK = INSPECT', vp_hud_webgl:'▣ WEBGL · 60 FPS TARGET',
+    vp_zoomin:'Zoom in', vp_zoomout:'Zoom out', vp_reset:'Reset view', vp_run:'▶ RUN STRESSING SEQUENCE', vp_stop:'■ STOP SEQUENCE',
+    vp_stat1:'TENDONS EXTRACTED', vp_stat2:'TOTAL TENDON LENGTH', vp_stat3:'SLAB AREA', vp_stat4:'CHAIRS SCHEDULED',
+    cap_kick:'02 — CAPABILITIES', cap_h1:'Everything between', cap_h2:'model and site.',
+    cap_sub:'One desktop app covering the full post-tension detailing workflow — extraction, inspection, profiling, and export.',
+    f1_t:'Drape Profiler', f1_p:'Parabolic drape curves, chair heights, live vs dead anchors and elongation computation. Drag the drape depth — the profile, chairs and elongation recalculate live.',
+    f1_drape:'MIDSPAN DRAPE', f1_drape_aria:'Adjust drape depth', f1_elong:'ELONG ≈ <b id="pelong">216 mm</b>', f1_anchor:'ANCHOR: <b>LIVE / DEAD</b>',
+    f2_t:'Direct Model Extraction', f2_p:'RAM Concept (.cpt) plus ADAPT-Builder via .inp — slabs, columns, walls, beams, tendons, rebar.', f2_src:'SOURCE ▸ RAM CONCEPT · ADAPT-BUILDER',
+    f3_t:'Live CAD Canvas', f3_p:'Pan, zoom, layer toggles. Click any tendon to inspect it — move your cursor inside:',
+    f4_t:'DXF Shop Drawings', f4_p:'Layered AutoCAD sheets with border, title block and embedded tendon schedule table.',
+    f5_t:'Excel + BBS', f5_p:'Takeoff summary, PT schedule, chair heights detail and full rebar bending schedules + CSV.',
+    f5_r1:'TAKEOFF', f5_r2:'PT SCHED', f5_r3:'CHAIRS', f5_r4:'REBAR BBS',
+    f6_t:'Per-PC Licensing', f6_p:'Machine-locked keys, offline activation, expiry reminders, free updates in-period.', f6_stat:'STATUS: <b>OFFLINE · MACHINE-LOCKED</b>',
+    how_kick:'03 — GET STARTED', how_h:'Licensed in three steps.', how_sub:'No account maze, no waiting. Pay, send one ID, start drawing.',
+    how_stamp:'7-DAY<br>FREE TRIAL<br>FULL FEATURES',
+    how_s1t:'Order &amp; confirm', how_s1p:'Grab the installer above or pick a plan in the pricing table below — you get an order confirmation <strong>instantly</strong>.',
+    how_s2t:'Send your Machine&nbsp;ID', how_s2p:'Install Vortex PT, click <code>Open Model</code> — copy the <code>Machine ID</code> from the Activation window and WhatsApp it to us with your name.',
+    how_s3t:'Activate &amp; draw', how_s3p:'We reply with your key — paste, <strong>Activate</strong>, done. Offline forever after.',
+    how_field:'FROM MODEL TO SITE',
+    fig1_alt:'Structural analysis model', fig2_alt:'Shop drawing production', fig3_alt:'Post-tension stressing on site',
+    fig1_cap:'<b>01</b> MODEL — RAM CONCEPT', fig2_cap:'<b>02</b> SHEET — DXF + SCHEDULES', fig3_cap:'<b>03</b> SITE — STRESSING DAY',
+    pr_kick:'04 — PRICING', pr_h1:'One license. One PC.', pr_h2:'No subscription traps.',
+    pr_sub:'Every plan ships the full toolset — extraction, CAD canvas, drape profiler, DXF + Excel exports.',
+    pr_tag_m:'PLAN / MONTHLY', pr_per_m:'PER 30 DAYS', pr_buy_m:'BUY MONTHLY',
+    pr_tag_y:'PLAN / YEARLY', pr_per_y:'PER 12 MONTHS · SAVE $50', pr_buy_y:'BUY YEARLY', pr_popular:'MOST POPULAR', pr_li4y:'Priority WhatsApp support',
+    pr_tag_l:'PLAN / LIFETIME', pr_per_l:'PAY ONCE · YOURS FOREVER', pr_buy_l:'BUY LIFETIME', pr_li2l:'1 PC, forever',
+    pr_li1:'Full features', pr_li2:'1 PC license', pr_li3:'Free updates in-period', pr_li4:'WhatsApp support',
+    pr_try:'⭳ DOWNLOAD · TRY 7 DAYS FREE',
+    pr_note1:'REPLACING YOUR PC? MESSAGE US TO TRANSFER YOUR LICENSE', pr_note2:'COMPANY MULTI-SEAT DEALS ON WHATSAPP', pr_note3:'PAID KEYS NON-REFUNDABLE AFTER DELIVERY — TRY THE 7-DAY TRIAL FIRST',
+    faq_kick:'05 — FAQ', faq_h:'Questions, answered.',
+    faq_q1:'Does it need internet?', faq_a1:'Only to download the installer. Activation and daily work are <strong>100% offline</strong> — the license is machine-locked and validated locally.',
+    faq_q2:'Which files does it open?', faq_a2:'RAM Concept (<span class="mono">.cpt</span>) directly, plus ADAPT-Builder via <span class="mono">.inp</span> export — slabs, columns, walls, beams, tendons and rebar all come through.',
+    faq_q3:'What exactly do I export?', faq_a3:'Layered AutoCAD DXF with title block + schedule table, and a multi-sheet Excel workbook (takeoff, PT schedule, chairs, rebar BBS) plus CSVs for downstream tools.',
+    faq_q4:'How do updates work?', faq_a4:'Settings → <strong>Check for Updates</strong> inside the app. Install over the old version; your license stays active — no re-activation needed. Release notes and installers live on <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest">GitHub Releases</a>.',
+    faq_q5:'Refund policy?', faq_a5:'Start with the free 7-day trial — full features, so you buy with confidence. Paid keys are non-refundable after delivery. Questions anytime on <a href="https://wa.me/201552228306?text=Vortex%20PT">WhatsApp</a>.',
+    ft_h:'Ready to <span>detail?</span>', ft_p:'Send us your Machine ID today — you could be exporting shop drawings before the coffee cools.',
+    ft_dl:'⭳ DOWNLOAD INSTALLER', ft_wa:'◈ CHAT ON WHATSAPP',
+    ft_meta:'<b>FILE</b> — VORTEX-PT / DESKTOP / WIN<br><b>INPUT</b> — .CPT · .INP<br><b>OUTPUT</b> — .DXF · .XLSX · .CSV<br><b>NETWORK</b> — NOT REQUIRED<br><b>SHEET</b> — S-001 / REV 0.9.5 / 2026',
+    ft_copy:'© <span id="yr">2026</span> VORTEX PT — POST-TENSION DETAILING, DONE RIGHT.', ft_copy2:'⌖ DRAWN OFFLINE · CHECKED ON SITE',
+    sb_xy:'X: <b id="sbx">0000.00</b>&nbsp;&nbsp;Y: <b id="sby">0000.00</b>', sb_layer:'LAYER: <b>PT-TENDONS</b>', sb_snap:'SNAP <span class="on">ON</span> · GRID <span class="on">ON</span> · ORTHO <span class="on">ON</span>', sb_lic:'LIC: <b>FREE TRIAL · 7 DAYS</b>',
+    toast_download:'Downloading Vortex PT installer — send us your Machine ID when prompted.',
+    toast_switch:'تم التبديل إلى العربية — Arabic is now active.',
+    toast_stress:'Stressing sequence running — jacks traversing bands.', toast_stopped:'Sequence stopped.',
+    toast_webgl:'WEBGL UNAVAILABLE', toast_webgl_p:'Interactive 3D preview needs hardware acceleration. Vortex PT itself runs fully offline on any Windows 10/11 PC.',
+    toast_static:'STATIC PREVIEW · KEYBOARD CONTROLS UNAVAILABLE WITHOUT WEBGL — ALL FEATURES WORK IN THE DESKTOP APP.',
+    sel_none:'NO SELECTION —<br>click any tendon in the viewport',
+    sel_info:'<b>%ID%</b> · 4 × Ø12.7 mm<br>L = %L% m · e = %E% mm<br>CHAIR H = %C% · ELONG %EL% mm<br>ANCHOR: LIVE ▸ DEAD'
+  },
+  ar:{
+    langBtn:'EN', title:'فورتكس بي تي — رسم تفاصيل ما بعد الشد أوفلاين | RAM Concept ‏.CPT ← DXF + إكسل',
+    nav_viewport:'العرض ثلاثي الأبعاد', nav_features:'القدرات', nav_how:'كيف تبدأ', nav_pricing:'الأسعار', nav_faq:'الأسئلة الشائعة', nav_download:'حمّل النسخة 0.9.5',
+    hero_sheet:'<b>S-001</b> اللوحة', hero_rev:'<b>0.9.5</b> المراجعة', hero_mode:'<b>أوفلاين</b> الوضع', hero_units:'<b>مم / ميجا باسكال</b> الوحدات',
+    hero_t1:'خرائط ما بعد الشد', hero_t2:'جاهزة للتنفيذ',
+    hero_lead:'من <strong>RAM Concept</strong> إلى خرائط جاهزة للموقع في دقائق. يستخرج فورتكس بي تي نموذجك الإنشائي، ويعرض <strong>لوحة CAD حيّة ثنائية الأبعاد</strong> مع مناسيب انحناء الكابلات، ويصدّر <strong>ملفات DXF متعددة الطبقات</strong> + <strong>جداول إكسل</strong> كاملة. أوفلاين، بترخيص لكل جهاز.',
+    hero_dl:'⭳ حمّل برنامج التثبيت · 0.9.5', hero_pricing:'← شاهد الأسعار',
+    hero_note:'ويندوز 10/11 · <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest" style="color:var(--cyan); border-bottom:1px solid var(--cyan-dim)">ملاحظات الإصدار</a> · تجربة مجانية 7 أيام — بكامل المزايا',
+    hero_stat1:'طبقات CAD', hero_stat2:'أوراق إكسل', hero_stat3:'أوفلاين بعد التفعيل',
+    detail_a:'التفصيل A — مقطع الكابل الجانبي', detail_scale:'المقياس 1:50',
+    tb_dwgno:'رقم اللوحة', tb_drawnby:'الرسم بواسطة', tb_date:'التاريخ', tb_status:'الحالة', tb_forconstr:'صالح للتنفيذ', scroll:'مرّر للأسفل',
+    mq_1:'RAM CONCEPT ‏<b>.CPT</b>', mq_2:'ADAPT-BUILDER ‏<b>.INP</b>', mq_3:'تصدير <b>DXF</b> لأوتوكاد', mq_4:'إكسل <b>BBS</b> + CSV', mq_5:'انحناء <b>قطع مكافئ</b>', mq_6:'ارتفاعات <b>الكراسي</b>', mq_7:'حساب <b>الاستطالة</b>', mq_8:'مراسٍ <b>حيّة / ميتة</b>', mq_9:'<b>100%</b> أوفلاين',
+    vp_kick:'01 — عرض النموذج', vp_h1:'أدر البلاطة.', vp_h2:'اختر كابلًا.',
+    vp_sub:'هذا هو شعور الاستخراج — نفس النموذج الذي يسحبه فورتكس بي تي من ملف <span class="mono" style="color:var(--cyan)">.cpt</span> الخاص بك، بمناسيبه وكراسيه وجاهزًا للتفصيل. اسحب للتدوير، ومرّر العجلة للتقريب، واختر أي كابل.',
+    vp_side:'منظور · مدار<br>الطبقة: <b style="color:var(--amber)">PT-TENDONS-X</b><br>الوحدات: م · مم',
+    vp_layers:'الطبقات', vp_selection:'التحديد', vp_nosel:'لا يوجد تحديد —<br>انقر على أي كابل في الشاشة',
+    vp_canvas_aria:'عرض ثلاثي الأبعاد تفاعلي للنموذج: بلاطة، كابلات ما بعد الشد، أعمدة وكراسٍ. اسحب للتدوير، مرّر العجلة للتقريب، وانقر على كابل لفحصه.',
+    vp_hud_model:'النموذج: طابق السطح · VP-2026-001', vp_hud_ctrl:'سحب للتدوير · عجلة للتقريب<br>النقر = فحص', vp_hud_webgl:'▣ WEBGL · هدف 60 إطار/ث',
+    vp_zoomin:'تكبير', vp_zoomout:'تصغير', vp_reset:'إعادة الضبط', vp_run:'▶ تشغيل تسلسل الشد', vp_stop:'■ إيقاف التسلسل',
+    vp_stat1:'كابلات مستخرجة', vp_stat2:'إجمالي أطوال الكابلات', vp_stat3:'مساحة البلاطة', vp_stat4:'كراسي مجدولة',
+    cap_kick:'02 — القدرات', cap_h1:'كل ما بين', cap_h2:'النموذج والموقع.',
+    cap_sub:'تطبيق سطح مكتب واحد يغطي سير عمل تفصيل ما بعد الشد بالكامل — استخراج، فحص، بروفايل، وتصدير.',
+    f1_t:'راسم منحنى الانحناء', f1_p:'منحنيات انحناء قطع مكافئ، ارتفاعات الكراسي، المراسي الحيّة والميتة وحساب الاستطالة. اسحب عمق الانحناء — يُعاد حساب المنحنى والكراسي والاستطالة لحظيًا.',
+    f1_drape:'انحناء المنتصف', f1_drape_aria:'ضبط عمق الانحناء', f1_elong:'الاستطالة ≈ <b id="pelong">216 مم</b>', f1_anchor:'المرسى: <b>حيّ / ميّت</b>',
+    f2_t:'استخراج مباشر للنموذج', f2_p:'RAM Concept ‏(.cpt) مباشرة بالإضافة إلى ADAPT-Builder عبر .inp — بلاطات، أعمدة، جدران، كمائم، كابلات وحديد تسليح.', f2_src:'المصدر ▸ RAM CONCEPT · ADAPT-BUILDER',
+    f3_t:'لوحة CAD حيّة', f3_p:'تحريك، تقريب، وإظهار الطبقات. انقر على أي كابل لفحصه — حرّك المؤشر داخل اللوحة:',
+    f4_t:'خرائط DXF للتنفيذ', f4_p:'لوحات أوتوكاد متعددة الطبقات مع حدود وخانة عنوان وجدول كابلات مدمج.',
+    f5_t:'إكسل + جداول تشكيل', f5_p:'ملخص الحصر، جدول الكابلات، تفاصيل ارتفاعات الكراسي وجداول تشكيل حديد التسليح الكاملة + CSV.',
+    f5_r1:'الحصر', f5_r2:'جدول الكابلات', f5_r3:'الكراسي', f5_r4:'BBS التسليح',
+    f6_t:'ترخيص لكل جهاز', f6_p:'مفاتيح مرتبطة بالجهاز، تفعيل بدون إنترنت، تذكير بالانتهاء، وتحديثات مجانية خلال فترة الترخيص.', f6_stat:'الحالة: <b>أوفلاين · مرتبط بالجهاز</b>',
+    how_kick:'03 — كيف تبدأ', how_h:'ترخيصك في ثلاث خطوات.', how_sub:'لا متاهة حسابات ولا انتظار. ادفع، أرسل رقمًا واحدًا، وابدأ الرسم.',
+    how_stamp:'تجربة<br>مجانية 7 أيام<br>بكامل المزايا',
+    how_s1t:'اطلب وأكّد', how_s1p:'حمّل البرنامج من الأعلى أو اختر خطة من جدول الأسعار أدناه — ستصلك رسالة تأكيد الطلب <strong>فورًا</strong>.',
+    how_s2t:'أرسل معرّف الجهاز', how_s2p:'ثبّت فورتكس بي تي واضغط <code>Open Model</code> — انسخ <code>معرّف الجهاز</code> من نافذة التفعيل وأرسله واتساب مع اسمك.',
+    how_s3t:'فعّل وارسم', how_s3p:'نرد عليك بالمفتاح — الصقه ثم <strong>Activate</strong>، وانتهى. أوفلاين للأبد بعدها.',
+    how_field:'من النموذج إلى الموقع',
+    fig1_alt:'نموذج التحليل الإنشائي', fig2_alt:'إنتاج خرائط التنفيذ', fig3_alt:'شد الكابلات في الموقع',
+    fig1_cap:'<b>01</b> النموذج — RAM CONCEPT', fig2_cap:'<b>02</b> اللوحة — DXF + الجداول', fig3_cap:'<b>03</b> الموقع — يوم الشد',
+    pr_kick:'04 — الأسعار', pr_h1:'ترخيص واحد. جهاز واحد.', pr_h2:'بلا فخ اشتراكات.',
+    pr_sub:'كل خطة تشمل كامل الأدوات — الاستخراج، لوحة CAD، راسم الانحناء، وتصدير DXF + إكسل.',
+    pr_tag_m:'الخطة / شهري', pr_per_m:'لكل 30 يومًا', pr_buy_m:'اشترك شهريًا',
+    pr_tag_y:'الخطة / سنوي', pr_per_y:'لكل 12 شهرًا · وفّر $50', pr_buy_y:'اشترك سنويًا', pr_popular:'الأكثر طلبًا', pr_li4y:'دعم واتساب ذو أولوية',
+    pr_tag_l:'الخطة / مدى الحياة', pr_per_l:'ادفع مرة واحدة · ملكك للأبد', pr_buy_l:'اشترِ مدى الحياة', pr_li2l:'جهاز واحد، للأبد',
+    pr_li1:'كامل المزايا', pr_li2:'ترخيص جهاز واحد', pr_li3:'تحديثات مجانية خلال الفترة', pr_li4:'دعم واتساب',
+    pr_try:'⭳ تحميل · جرّب 7 أيام مجانًا',
+    pr_note1:'تغيّر جهازك؟ راسلنا لنقل الترخيص', pr_note2:'صفقات الشركات متعددة الأجهزة عبر واتساب', pr_note3:'المفاتيح المدفوعة غير قابلة للاسترداد بعد التسليم — جرّب الـ 7 أيام المجانية أولًا',
+    faq_kick:'05 — الأسئلة الشائعة', faq_h:'أسئلة.. وإجاباتها.',
+    faq_q1:'هل يحتاج إنترنت؟', faq_a1:'فقط لتحميل برنامج التثبيت. التفعيل والعمل اليومي <strong>أوفلاين 100%</strong> — الترخيص مرتبط بالجهاز ويُتحقق محليًا.',
+    faq_q2:'أي ملفات يفتح؟', faq_a2:'ملفات RAM Concept ‏(<span class="mono">.cpt</span>) مباشرة، بالإضافة إلى ADAPT-Builder عبر تصدير <span class="mono">.inp</span> — البلاطات والأعمدة والجدران والكمائم والكابلات والحديد كلها تنتقل.',
+    faq_q3:'ماذا أُصدّر بالضبط؟', faq_a3:'ملفات AutoCAD DXF متعددة الطبقات مع خانة عنوان وجدول كابلات، ومصنف إكسل متعدد الأوراق (حصر، جدول كابلات، كراسي، BBS تسليح) بالإضافة إلى ملفات CSV للأدوات التالية.',
+    faq_q4:'كيف تعمل التحديثات؟', faq_a4:'الإعدادات ← <strong>Check for Updates</strong> داخل التطبيق. ثبّت فوق النسخة القديمة؛ يبقى ترخيصك فعّالًا — دون إعادة تفعيل. ملاحظات الإصدارات وبرامج التثبيت على <a href="https://github.com/ahmedelkholy8/VortexPT/releases/latest">GitHub Releases</a>.',
+    faq_q5:'سياسة الاسترداد؟', faq_a5:'ابدأ بالتجربة المجانية 7 أيام — بكامل المزايا، لتشتري بثقة. المفاتيح المدفوعة غير قابلة للاسترداد بعد التسليم. أسئلتك في أي وقت على <a href="https://wa.me/201552228306?text=Vortex%20PT">واتساب</a>.',
+    ft_h:'جاهز <span>للتفصيل؟</span>', ft_p:'أرسل لنا معرّف جهازك اليوم — قد تُصدّر خرائط تنفيذ قبل أن يبرد قهوتك.',
+    ft_dl:'⭳ حمّل برنامج التثبيت', ft_wa:'◈ راسلنا على واتساب',
+    ft_meta:'<b>الملف</b> — VORTEX-PT / سطح مكتب / ويندوز<br><b>المدخلات</b> — .CPT · .INP<br><b>المخرجات</b> — .DXF · .XLSX · .CSV<br><b>الشبكة</b> — غير مطلوبة<br><b>اللوحة</b> — S-001 / المراجعة 0.9.5 / 2026',
+    ft_copy:'© <span id="yr">2026</span> فورتكس بي تي — تفصيل ما بعد الشد، بإتقان.', ft_copy2:'⌖ رُسم أوفلاين · روجع في الموقع',
+    sb_xy:'س: <b id="sbx">0000.00</b>&nbsp;&nbsp;ص: <b id="sby">0000.00</b>', sb_layer:'الطبقة: <b>PT-TENDONS</b>', sb_snap:'SNAP <span class="on">مفتوح</span> · GRID <span class="on">مفتوح</span> · ORTHO <span class="on">مفتوح</span>', sb_lic:'الترخيص: <b>تجربة مجانية · 7 أيام</b>',
+    toast_download:'جارٍ تحميل برنامج تثبيت فورتكس بي تي — أرسل لنا معرّف جهازك عند الطلب.',
+    toast_switch:'Switched to English — تم الرجوع إلى الإنجليزية.',
+    toast_stress:'تسلسل الشد قيد التشغيل — الجاكات تتحرك عبر الأطواق.', toast_stopped:'تم إيقاف التسلسل.',
+    toast_webgl:'WEBGL غير متاح', toast_webgl_p:'المعاينة ثلاثية الأبعاد التفاعلية تحتاج تسريعًا للعتاد. يعمل فورتكس بي تي نفسه بالكامل أوفلاين على أي جهاز ويندوز 10/11.',
+    toast_static:'معاينة ثابتة · أدوات لوحة المفاتيح غير متاحة بدون WEBGL — كل المزايا تعمل في تطبيق سطح المكتب.',
+    sel_none:'لا يوجد تحديد —<br>انقر على أي كابل في الشاشة',
+    sel_info:'<b>%ID%</b> · 4 × Ø12.7 مم<br>الطول = %L% م · الانحناء = %E% مم<br>ارتفاع الكرسي = %C% · الاستطالة %EL% مم<br>المرسى: حيّ ◂ ميّت'
+  }
+};
+let LANG = 'en';
+try{ const s = localStorage.getItem('vortex-lang'); if(s==='ar'||s==='en') LANG = s; }catch(e){}
+
+function applyLang(lang){
+  LANG = (lang==='ar') ? 'ar' : 'en';
+  const dict = I18N[LANG];
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = (LANG==='ar') ? 'rtl' : 'ltr';
+  document.title = dict.title;
+  $$('[data-i18n]').forEach(el=>{
+    const k = el.dataset.i18n, v = dict[k];
+    if(v===undefined) return;
+    if('i18nHtml' in el.dataset) el.innerHTML = v;
+    else if('i18nAria' in el.dataset) el.setAttribute('aria-label', v.replace(/<[^>]+>/g,''));
+    else if('i18nAlt' in el.dataset) el.setAttribute('alt', v);
+    else el.textContent = v;
+  });
+  // re-run scramble effect on freshly translated hero titles (skip on initial pass)
+  if(window.__langInit){
+    $$('.hero [data-scramble]').forEach((el,i)=> setTimeout(()=>scramble(el), i*200));
+    // any translatable element already inside the viewport: keep it revealed
+    $$('.rv:not(.in)').forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top<innerHeight && r.bottom>0) el.classList.add('in'); });
+  } else { window.__langInit = true; }
+  // dynamic widgets that hold translated markup
+  const rb = $('#runBtn');
+  if(rb && !rb.classList.contains('off')) rb.textContent = dict.vp_run;
+  const st = $('#selText');
+  if(st && !st.dataset.selActive) st.innerHTML = dict.vp_nosel;
+  if(window.__renderProf) window.__renderProf();
+  const stEl = $('#selText');
+  if(stEl && stEl.dataset.selActive){ /* keep last selection markup; it re-translates on next pick */ }
+  const lb = $('#langBtn');
+  if(lb){ lb.textContent = (LANG==='ar') ? 'EN' : 'عربي'; lb.setAttribute('aria-label', (LANG==='ar')?'Switch to English':'النسخة العربية'); }
+  try{ localStorage.setItem('vortex-lang', LANG); }catch(e){}
+}
+window.__t = (k)=> I18N[LANG][k] || I18N.en[k] || k;
+applyLang(LANG);
+$('#langBtn').addEventListener('click', ()=>{
+  applyLang(LANG==='ar' ? 'en' : 'ar');
+  say(I18N[LANG].toast_switch);
+});
+
+$$('a[download]').forEach(a=>a.addEventListener('click', ()=> say(window.__t('toast_download'))));
 
 /* ---------- scramble decode ---------- */
 const GLYPHS = '▓▒░<>/\\|=+×#01';
@@ -852,7 +1078,14 @@ function scramble(el){
     if(frame++ < total) requestAnimationFrame(tick); else el.textContent = final;
   })();
 }
-setTimeout(()=> $$('.hero [data-scramble]').forEach((el,i)=> setTimeout(()=>scramble(el), i*260)), 200);
+const heroEl = $('.hero');
+if(heroEl){
+  const ioHero = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ ioHero.disconnect();
+      $$('.hero [data-scramble]').forEach((el,i)=> setTimeout(()=>scramble(el), i*260)); } });
+  },{threshold:.1});
+  ioHero.observe(heroEl);
+}
 setTimeout(()=> $('.hero').classList.add('in'), 120);
 
 /* ---------- marquee duplicate ---------- */
@@ -895,19 +1128,23 @@ $$('.rv').forEach(el=>io.observe(el));
 const pr = $('#prange');
 if(pr){
   const qy=(t,yc)=> (1-t)*(1-t)*78 + 2*(1-t)*t*yc + t*t*78;
-  pr.addEventListener('input', ()=>{
+  const MM = ()=> LANG==='ar' ? ' مم' : ' mm';
+  function renderProf(){
     const v=+pr.value, drop=v*0.9, yc=78+2*drop;
     $('#pp').setAttribute('d', `M36 78 Q280 ${yc} 524 78`);
     const y1=qy(0.25,yc), y2=qy(0.5,yc), y3=qy(0.75,yc);
     const c1=$('#pc1'),c2=$('#pc2'),c3=$('#pc3');
     c1.setAttribute('y2',y1); c2.setAttribute('y2',y2); c3.setAttribute('y2',y3);
     $('#pd1').setAttribute('y2',y2);
-    $('#pe').textContent = `e = ${v} mm`;
+    $('#pe').textContent = (LANG==='ar'?'الانحناء = ':'e = ') + v + MM();
     $('#pe').setAttribute('y', Math.max(100,(78+y2)/2));
-    $('#pch').textContent = `CHAIR H = ${Math.max(25,v-35)} mm`;
-    $('#prangeVal').textContent = v+' mm';
-    $('#pelong').textContent = Math.round(v*2.4)+' mm';
-  });
+    $('#pch').textContent = (LANG==='ar'?'ارتفاع الكرسي = ':'CHAIR H = ') + Math.max(25,v-35) + MM();
+    $('#prangeVal').textContent = v + MM();
+    $('#pelong').textContent = Math.round(v*2.4) + MM();
+  }
+  pr.addEventListener('input', renderProf);
+  window.__renderProf = renderProf;
+  renderProf();
 }
 
 /* ---------- mini CAD crosshair ---------- */
@@ -975,8 +1212,8 @@ if(typeof THREE === 'undefined' || !glOK){
     if(vstage){
       const fb=document.createElement('div');
       fb.style.cssText='position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:20px';
-      fb.innerHTML='<span class="mono" style="font-size:11px; letter-spacing:.26em; color:var(--amber)">WEBGL UNAVAILABLE</span>'+
-        '<span class="mono" style="font-size:10.5px; letter-spacing:.14em; color:var(--txt-dim); max-width:34ch">Interactive 3D preview needs hardware acceleration. Vortex PT itself runs fully offline on any Windows 10/11 PC.</span>';
+      fb.innerHTML='<span class="mono" style="font-size:11px; letter-spacing:.26em; color:var(--amber)">'+window.__t('toast_webgl')+'</span>'+
+        '<span class="mono" style="font-size:10.5px; letter-spacing:.14em; color:var(--txt-dim); max-width:34ch">'+window.__t('toast_webgl_p')+'</span>';
       vstage.appendChild(fb);
     }
     glCanvas.remove();
@@ -984,7 +1221,7 @@ if(typeof THREE === 'undefined' || !glOK){
   /* keyboard-accessible fallback controls for the static preview */
   const kb=document.createElement('div');
   kb.className='vp-kb';
-  kb.innerHTML='<span class="mono">STATIC PREVIEW · KEYBOARD CONTROLS UNAVAILABLE WITHOUT WEBGL — ALL FEATURES WORK IN THE DESKTOP APP.</span>';
+  kb.innerHTML='<span class="mono">'+window.__t('toast_static')+'</span>';
   const vstage2=$('#vpStage'); if(vstage2) vstage2.appendChild(kb);
 } else if(glCanvas){
   const canvas=$('#gl'), stage=$('#vpStage');
@@ -1086,10 +1323,10 @@ if(typeof THREE === 'undefined' || !glOK){
   function setStress(on){
     stressing=on;
     pulses.forEach(p=>p.visible=on&&!RM);
-    runBtn.textContent = on? '■ STOP SEQUENCE' : '▶ RUN STRESSING SEQUENCE';
+    runBtn.textContent = on? window.__t('vp_stop') : window.__t('vp_run');
     runBtn.classList.toggle('off',!on);
   }
-  runBtn.addEventListener('click', ()=>{ setStress(!stressing); say(stressing?'Stressing sequence running — jacks traversing bands.':'Sequence stopped.'); });
+  runBtn.addEventListener('click', ()=>{ setStress(!stressing); say(stressing?window.__t('toast_stress'):window.__t('toast_stopped')); });
 
   /* orbit state */
   let rotX=-.52, rotY=.55, tX=rotX, tY=rotY, dist=30, tDist=30, lastTouch=0;
@@ -1120,13 +1357,16 @@ if(typeof THREE === 'undefined' || !glOK){
     ray.setFromCamera(ndc,camera);
     const hits=ray.intersectObjects(tubes);
     if(selected){ selected.material.color.setHex(selected.userData.base); selected=null; }
-    if(!hits.length){ selDot.textContent='○'; selText.innerHTML='NO SELECTION —<br>click any tendon in the viewport'; return; }
+    if(!hits.length){ selDot.textContent='○'; selText.dataset.selActive=''; selText.innerHTML=window.__t('vp_nosel'); return; }
     selected=hits[0].object;
     selected.material.color.setHex(0xfff0b0);
     const u=selected.userData, L=(u.len*1.5).toFixed(1);
     const e_mm=120+((u.idx-1)||0)*8, ch=Math.round(e_mm*.62), el=Math.round(L*5.6);
     selDot.textContent='●'; selDot.style.color='var(--amber)';
-    selText.innerHTML=`<b>${typeof u.idx==='number'?'TL-0':'T-'}${u.idx}</b> · 4 × Ø12.7 mm<br>L = ${L} m · e = ${e_mm} mm<br>CHAIR H = ${ch} · ELONG ${el} mm<br>ANCHOR: LIVE ▸ DEAD`;
+    selText.dataset.selActive='1';
+    selText.innerHTML=window.__t('sel_info')
+      .replace('%ID%', (typeof u.idx==='number'?'TL-0':'T-')+u.idx)
+      .replace('%L%', L).replace('%E%', e_mm).replace('%C%', ch).replace('%EL%', el);
     selBox.classList.remove('flash'); void selBox.offsetWidth; selBox.classList.add('flash');
   }
 
@@ -1135,7 +1375,7 @@ if(typeof THREE === 'undefined' || !glOK){
     cb.addEventListener('change', ()=>{
       const key=cb.dataset.layer; if(G[key]) G[key].visible=cb.checked;
       if(selected && !selected.parent.visible) { selected.material.color.setHex(selected.userData.base); selected=null; }
-      say(`LAYER ${cb.dataset.layer.toUpperCase()} ${cb.checked?'ON':'OFF'}`);
+      say(LANG==='ar' ? `الطبقة ${cb.dataset.layer.toUpperCase()} ${cb.checked?'ظاهرة':'مخفية'}` : `LAYER ${cb.dataset.layer.toUpperCase()} ${cb.checked?'ON':'OFF'}`);
     });
   });
 
